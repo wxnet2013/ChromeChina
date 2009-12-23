@@ -1,0 +1,20 @@
+﻿<label for="name">
+    name</label><input id="name" type="text" value="" /><br />
+<label for="url">
+    url</label><input id="url" type="text" value="" /><br />
+<label for="bg">
+    编码</label><input id="gb" type="checkbox" checked="checked" /><br />
+<input id="add" type="button" value="确定" /><input id="cancel" type="button" value="取消" />
+
+<script>
+    var ourl = document.getElementById("url");
+    var oname = document.getElementById("name");
+    var gb = document.getElementById("gb");
+    document.getElementById("add").onclick = function() {
+        parent.engine.addEngine(oname.value, ourl.value, gb.checked);
+    };
+    document.getElementById("cancel").onclick = function() {
+        parent.engine.cancelAddEngine();
+    };
+</script>
+
