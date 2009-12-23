@@ -133,11 +133,10 @@
             }
         }
         aSaveCallback.push(saveShowSearchType);
-        resetUI("showsearch", "menu");
+        resetUI("showsearch", "newwindow");
 
         function resetUI(key, id) {
             var id = getData(key) || id;
-            alert(id);
             $(id).checked = true;
         }
 
