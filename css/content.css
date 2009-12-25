@@ -29,7 +29,7 @@
     -webkit-user-select: none;
 }
 
-.view-cmenu-item:first-child
+.splitline
 {
     border-bottom: 1px solid #bfbfbf;
 }

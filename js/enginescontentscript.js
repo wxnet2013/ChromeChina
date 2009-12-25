@@ -55,6 +55,7 @@ request_({ option: "getinfo" }, function(opt) {
     searchResultDisplayMode = opt.searchshow;
 });
 
+var reUrl = /(.*?)\.(com|cn|tel|mobi|net|org|asia|me|com|cn|net|cn|org|cn|gov|cn|hk|tv|biz|cc|name|info|公司|网络|中国)(\/(.*?))?/i;
 var view = {
     toolbar: function(showtype) {
         var contentClass = "view-cmenu view-hidden";
@@ -73,10 +74,17 @@ var view = {
 
         var li = document.createElement("li");
         li.id = "copy";
-        li.className = itemclass;
+        li.className = itemclass + " splitline";
         li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制(C)<span style='float:right'>Ctrl+C</span></a> ";
         div.appendChild(li);
-        
+
+        li = document.createElement("li");
+        li.id = "goto";
+        li.className = itemclass + " splitline";
+        div.appendChild(li);
+
+
+
         each(engines_, function(i, obj) {
             var button;
             if (this.isused) {

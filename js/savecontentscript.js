@@ -58,6 +58,24 @@ function onContextMenu(e) {
         toolbar = view.toolbar();
         setPos(toolbar, e.clientX + scroll.left, e.clientY + scroll.top);
         removeClass(toolbar, "view-hidden");
+        var li = toolbar.getElementsByTagName("li")[1];
+        if (reUrl.test(selectText)) {
+
+            toolbar.getElementsByTagName("li")[0].className = toolbar.getElementsByTagName("li")[0].className.replace(/splitline/, "");
+
+            li.style.cssText = "display:block;white-space: nowrap;overflow: hidden;";
+            li.innerHTML = "转到" + selectText;
+
+            li.onclick = function() {
+                if (selectText.indexOf("http") != 0) {
+                    postMessage_({ "newtab": "http://" + selectText });
+                } else
+                    postMessage_({ "newtab": selectText });
+            };
+        } else {
+            li.style.display = "none";
+            toolbar.getElementsByTagName("li")[0].className += " splitline";
+        }
         e.preventDefault();
     }
 }
