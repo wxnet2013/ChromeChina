@@ -61,12 +61,6 @@ var view = {
         var contentClass = "view-cmenu view-hidden";
         var itemclass = "view-cmenu-item";
 
-        if (showtype == "toolbar") {
-            contentClass = "view-ctoolbar view-hidden";
-            itemclass = "view-ctoolbar-item";
-            menuid = "view-ctoolbar";
-        }
-
         if (!!$(menuid)) return $(menuid);
         var div = document.createElement("ul");
         div.id = menuid;
@@ -78,12 +72,13 @@ var view = {
         li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制(C)<span style='float:right'>Ctrl+C</span></a> ";
         div.appendChild(li);
 
+        /**
+        *显示“转到url”的容器
+        */
         li = document.createElement("li");
         li.id = "goto";
         li.className = itemclass + " splitline";
         div.appendChild(li);
-
-
 
         each(engines_, function(i, obj) {
             var button;
@@ -101,7 +96,7 @@ var view = {
 };
 
 /**
-*创建toolbar
+*注册事件
 */
 function registerSearchButtonEvent(ele, name) {
     addEvent(ele, "mouseup", function(e) {

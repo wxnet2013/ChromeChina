@@ -18,46 +18,18 @@ chrome.extension.connect().postMessage({
 
 
 /**
-*鼠标弹起时执行
-*/
-//function onMouseUp(e) {
-//    selectText = getSelectText(e);
-//    var mode = !!selectText && e.button == 0
-//    var isPressctrlKey = e.ctrlKey;
-
-//    if (popupmode == "ctrlselect") {
-//        mode = !!selectText && e.button == 0 && isPressctrlKey;
-//    }
-
-//    if (mode) {
-//        console.log(isPressctrlKey);
-//        var scroll = getScroll();
-//        toolbar = view.toolbar();
-//        setPos(toolbar, e.clientX + scroll.left, e.clientY + scroll.top);
-//        removeClass(toolbar, "view-hidden");
-//        console.log("显示");
-//        sendMessage = function() {
-//            chrome.extension.connect().postMessage({ "text": selectText });
-//        };
-//    } else {
-//    var menu = $(menuid);
-//        if (!!menu && menu.className.indexOf("view-hidden") == -1)
-//            addClass(menu, "view-hidden");
-//    }
-//}
-
-//addEvent(document, "mouseup", onMouseUp);
-
-/**
 *快捷菜单
 */
 function onContextMenu(e) {
     selectText = getSelectText(e);
     if (selectText) {
-        var scroll = getScroll();
+        
         toolbar = view.toolbar();
-        setPos(toolbar, e.clientX + scroll.left, e.clientY + scroll.top);
-        removeClass(toolbar, "view-hidden");
+
+        showMenu(toolbar, e, function() {
+            removeClass(toolbar, "view-hidden");
+        });
+
         var li = toolbar.getElementsByTagName("li")[1];
         if (reUrl.test(selectText)) {
 
@@ -76,11 +48,14 @@ function onContextMenu(e) {
             li.style.display = "none";
             toolbar.getElementsByTagName("li")[0].className += " splitline";
         }
-        e.preventDefault();
+        /**
+        *在查看源文件页面(view-source:http)不去阻止默认的快捷菜单
+        */
+        if (!document.querySelector("div:first-child.webkit-line-gutter-backdrop"))
+            e.preventDefault();
     }
 }
 addEvent(document, "contextmenu", onContextMenu);
-
 
 addEvent(document, "click", function() {
     var menu = $(menuid);
@@ -88,11 +63,3 @@ addEvent(document, "click", function() {
         addClass(menu, "view-hidden");
     }
 });
-
-//toolbar = view.toolbar();
-//oSaveButton = createImageButton("images/save.jpg", "save", "保存");
-//toolbar.appendChild(oSaveButton);
-//addEvent(oSaveButton, "mouseup", function(e) {
-//    sendMessage();
-//    e.stopPropagation();
-//});

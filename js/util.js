@@ -56,6 +56,38 @@ function setPos(ele, x, y) {
     ele.style.top = y + "px";
 }
 
+//右键弹出框函数
+function showMenu(elem, e, showcallback) {
+    var scroll = getScroll();
+    var lf = document.documentElement.clientWidth - e.clientX,
+            tp = document.documentElement.clientHeight - e.clientY,
+            dstop = scroll.top,
+            dsleft = scroll.left;
+
+
+    var setPosition = function() {
+        elem.style.display = "block";
+        if (lf < elem.offsetWidth) {
+            elem.style.left = dsleft + e.clientX + "px";
+            elem.style.left = dsleft + e.clientX - elem.offsetWidth + "px";
+        } else {
+            elem.style.left = elem.style.left = dsleft + e.clientX + "px";
+        }
+        if (tp < elem.offsetHeight) {
+            elem.style.top = dstop + e.clientY + "px";
+            elem.style.top = dstop + e.clientY - elem.offsetHeight + "px";
+        } else {
+            elem.style.top = elem.style.top = dstop + e.clientY + "px";
+        }
+    };
+
+    elem.style.display = "block";
+
+    setPosition();
+    (showcallback || nullFunction)();
+    e.preventDefault();
+}
+
 /**
 *创建图像按钮
 */
