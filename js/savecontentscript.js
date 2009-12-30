@@ -21,9 +21,10 @@ chrome.extension.connect().postMessage({
 *快捷菜单
 */
 function onContextMenu(e) {
+    if (doNotShowMenu(e)) return;
     selectText = getSelectText(e);
     if (selectText) {
-        
+
         toolbar = view.toolbar();
 
         showMenu(toolbar, e, function() {
@@ -51,10 +52,10 @@ function onContextMenu(e) {
         /**
         *在查看源文件页面(view-source:http)不去阻止默认的快捷菜单
         */
-        if (!document.querySelector("div:first-child.webkit-line-gutter-backdrop"))
-            e.preventDefault();
+        e.preventDefault();
     }
 }
+
 addEvent(document, "contextmenu", onContextMenu);
 
 addEvent(document, "click", function() {
@@ -63,3 +64,16 @@ addEvent(document, "click", function() {
         addClass(menu, "view-hidden");
     }
 });
+
+/**
+*禁用自定义快捷菜单的一些情况
+*/
+function doNotShowMenu(e) {
+    var target = e.target;
+    if (target.tagName.toLowerCase() == "textarea" ||
+        (target.tagName.toLowerCase() == "input" && target.type == "text") ||
+        !!document.querySelector("div:first-child.webkit-line-gutter-backdrop")) {
+        return true;
+    }
+}
+
