@@ -91,7 +91,7 @@
     <fieldset>
         <legend>搜索</legend>
         <h5>
-            选择引擎</h5>
+            选择搜索引擎:</h5>
         <div id="jstemplate" style="display: none;">
             <li><span class="$class state" id="$id" name="engine"></span>
                 <label for="$id">
@@ -104,41 +104,53 @@
         </ul>
         <input id="add" type="button" value="添加" />
         <h5>
-            显示</h5>
-        <input id="pop" type="radio" name="show" checked="checked" /><label for="pop">弹出</label>
-        <input id="newtab" type="radio" name="show" /><label for="newtab">新标签</label>
-        <input id="newwindow" type="radio" name="show" /><label for="newwindow">新窗口</label>
+            拖拽选取文本:
+        </h5>
+        <select id="selectEngine">
+        </select>
+        <h5>
+            显示搜索结果:</h5>
+        <input id="search_show_pop" value="pop" type="radio" name="show" checked="checked" /><label
+            for="search_show_pop">弹出</label>
+        <input id="search_show_newtab" value="newtab" type="radio" name="show" /><label for="search_show_newtab">新标签</label>
+        <input id="search_show_newwindow" value="newwindow" type="radio" name="show" /><label
+            for="search_show_newwindow">新窗口</label>
+    </fieldset>
+    <fieldset>
+        <legend>超级拖拽</legend>
+        <h5>
+            拖拽图片:</h5>
+        <input id="image_view" value="imageview" type="radio" name="imageview" checked="checked" /><label
+            for="image_view">照片查看器</label>
+        <input id="image_new_tab" type="radio" value="nettab" name="imageview" /><label for="image_new_tab">新标签</label>
+        <input id="image_new_window" type="radio" value="newwindow" name="imageview" /><label
+            for="image_new_window">新窗口</label>
+        <h5>
+            拖拽链接:</h5>
+        <input id="link_popup" type="radio" value="popup" name="linkview" checked="checked" /><label
+            for="link_popup">弹出</label>
+        <input id="link_new_tab" type="radio" value="newtab" name="linkview" /><label for="link_new_tab">新标签</label>
+        <input id="link_new_window" type="radio" value="newwindow" name="linkview" /><label
+            for="link_new_window">新窗口</label>
     </fieldset>
     <br />
-    <input id="save" type="button" value="保存" /><input id="close" type="button" value="关闭" />
+    <input id="close" type="button" value="关闭" />
 
     <script type="text/javascript">
         $("close").onclick = function() {
             window.close();
         };
-        var aSaveCallback = [];
 
-        $("save").onclick = function() {
-            for (var i = 0; i < aSaveCallback.length; i++) {
-                aSaveCallback[i]();
-            }
-            alert("保存成功！");
-        };
 
         //工具条样式
-        function saveShowSearchType() {
-            var options = document.getElementsByName("show");
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].checked) saveData("showsearch", options[i].id);
-            }
-        }
-        aSaveCallback.push(saveShowSearchType);
-        resetUI("showsearch", "newwindow");
-
-        function resetUI(key, id) {
-            var id = getData(key) || id;
-            $(id).checked = true;
-        }
+         var oSearch = document.getElementsByName("show");
+         each(oSearch,function(){
+         addEvent(this,"click",function(){
+            saveData("showsearch",this.value);          
+         });
+         }); 
+         getElmentByValue(oSearch,getData("showsearch")).checked = true;
+        
 
         /**
         *预定义的搜索引擎
@@ -304,6 +316,71 @@
             dialogadd.open("add.html");
             e.stopPropagation();
         });
+        
+        
+        
+        /**
+        *初始化拖拽搜索列表
+        */
+        var oSelectEngines = $("selectEngine");
+        each(aEngines,function(){
+            oSelectEngines.options.add(new Option(this.name,this.id));
+        });
+        
+
+        
+        oSelectEngines.selectedIndex = getIndexByValue(getData("dragengine"));
+         
+         addEvent(oSelectEngines,"change",function(){
+            saveData("dragengine",this.value);
+         });
+         
+         
+         
+         function getIndexByValue(value){
+         var ret = 0;
+         each(oSelectEngines.options,function(i,x){
+         if(this.value == value){
+         ret = i;
+         return false;
+         }
+         });
+         
+          return  ret;
+         }
+         
+         
+         /**
+         *超级拖拽
+         */       
+         var oDragImages = document.getElementsByName("imageview");
+         each(oDragImages,function(){
+         addEvent(this,"click",function(){
+            saveData("dragImageDisplayMode",this.value);          
+         });
+         });
+         
+         getElmentByValue(oDragImages,getData("dragImageDisplayMode")).checked = true;
+         
+         var oDragLinks = document.getElementsByName("linkview");
+         each(oDragLinks,function(){
+         addEvent(this,"click",function(){
+            saveData("dragLinkDisplayMode",this.value);           
+         });
+         });
+         
+         getElmentByValue(oDragLinks,getData("dragLinkDisplayMode")).checked = true;;
+         
+         function getElmentByValue(ele,value){
+         var ret = ele[0];
+         each(ele,function(){
+         if(this.value == value) {
+         ret = this;
+         return false;
+         }
+         });
+         return ret;
+         }
 
 
         /**

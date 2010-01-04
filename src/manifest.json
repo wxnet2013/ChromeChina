@@ -1,7 +1,7 @@
 ﻿{
 "name":"QuickSearch",
-"version":"1.3.3",
-"description":"向快捷菜单中添加搜索引擎.",
+"version":"1.6.3",
+"description":"超级拖拽功能、将自定义的搜索引擎添加到右键菜单中",
 "background_page": "background.html",
    "icons": {
       "128": "images/search-icon-128x128.png"
@@ -9,7 +9,7 @@
 "content_scripts": [
   {
 	"css": ["css/content.css"],
-	"js": ["js/core.js", "js/util.js", "js/encodeToGb2312.js", 	"js/enginescontentscript.js", "js/savecontentscript.js"],
+	"js": ["js/core.js", "js/util.js", "js/encodeToGb2312.js", "js/imageview.js",	"js/enginescontentscript.js", "js/savecontentscript.js","js/superdrag.js"],
     	"matches": ["http://*/*", "https://*/*"]
   }
 ],

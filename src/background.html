@@ -106,10 +106,11 @@
     chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         if (request.option == "getinfo")
             sendResponse({
-                searchshow: (localStorage["showsearch"] || "pop"),
-                engines: (localStorage["engines"] || JSON.stringify(engines_))
-                //popmode: (localStorage["popmode"] || "onlyselect"),
-                //popview: (localStorage["popview"] || "toolbar")
+                searchshow: (localStorage["showsearch"] || "newwindow"),
+                engines: (localStorage["engines"] || JSON.stringify(engines_)),
+                dragengine:(localStorage["dragengine"] || 0),
+                dragImageDisplayMode:(localStorage["dragImageDisplayMode"] || "imageview"),
+                dragLinkDisplayMode:(localStorage["dragLinkDisplayMode"] || "newwindow")
             });
         else
             sendResponse({});
