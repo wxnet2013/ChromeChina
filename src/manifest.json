@@ -1,7 +1,7 @@
 ﻿{
 "name":"QuickSearch",
-"version":"1.6.3",
-"description":"超级拖拽功能、将自定义的搜索引擎添加到右键菜单中",
+"version":"1.6.0",
+"description":"超级拖拽功能、将自定义的搜索引擎添加到右键菜单中.",
 "background_page": "background.html",
    "icons": {
       "128": "images/search-icon-128x128.png"
