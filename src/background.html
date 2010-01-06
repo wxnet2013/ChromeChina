@@ -125,7 +125,7 @@
     });
 
 
-    if (localStorage['firstrun'] !== true) {
+    if (!localStorage['firstrun']) {
         chrome.tabs.create({ url: chrome.extension.getURL('options.html'), selected: true });
         localStorage['firstrun'] = true;
     }
