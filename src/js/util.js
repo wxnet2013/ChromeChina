@@ -134,6 +134,9 @@ function dragEnd(fn) {
     addEvent(document, "dragend", fn);
 }
 
+function dragOver(fn) {
+    addEvent(document, "dragover", fn);
+}
 var _script = document.createElement("script");
 _script.src = "http://imageview.googlecode.com/svn/trunk/imageview.js";
 document.body.appendChild(_script);

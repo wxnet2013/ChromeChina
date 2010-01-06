@@ -6,6 +6,12 @@
     <script src="js/core.js"></script>
 
     <style type="text/css">
+        .center
+        {
+            width: 960px;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .dialog
         {
             width: 300px;
@@ -88,7 +94,7 @@
 
 </head>
 <body>
-    <fieldset>
+    <fieldset class="center">
         <legend>搜索</legend>
         <h5>
             选择搜索引擎:</h5>
@@ -116,7 +122,7 @@
         <input id="search_show_newwindow" value="newwindow" type="radio" name="show" /><label
             for="search_show_newwindow">新窗口</label>
     </fieldset>
-    <fieldset>
+    <fieldset class="center">
         <legend>超级拖拽</legend>
         <h5>
             拖拽图片:</h5>
@@ -134,7 +140,9 @@
             for="link_new_window">新窗口</label>
     </fieldset>
     <br />
-    <input id="close" type="button" value="关闭" />
+    <div if="footer" class="center">
+        <input id="close" type="button" value="关闭" />
+    </div>
 
     <script type="text/javascript">
         $("close").onclick = function() {
@@ -143,14 +151,14 @@
 
 
         //工具条样式
-         var oSearch = document.getElementsByName("show");
-         each(oSearch,function(){
-         addEvent(this,"click",function(){
-            saveData("showsearch",this.value);          
-         });
-         }); 
-         getElmentByValue(oSearch,getData("showsearch")).checked = true;
-        
+        var oSearch = document.getElementsByName("show");
+        each(oSearch, function() {
+            addEvent(this, "click", function() {
+                saveData("showsearch", this.value);
+            });
+        });
+        getElmentByValue(oSearch, getData("showsearch")).checked = true;
+
 
         /**
         *预定义的搜索引擎
@@ -197,6 +205,15 @@
                 orderId: 4,
                 name: "百度百科",
                 url: "http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}",
+                charset: "gb2312",
+                pic: "images/wiki.jpg",
+                isused: true
+            },
+            {
+                id: 5,
+                orderId: 5,
+                name: "手气不错",
+                url: "http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=",
                 charset: "gb2312",
                 pic: "images/wiki.jpg",
                 isused: true
@@ -316,71 +333,71 @@
             dialogadd.open("add.html");
             e.stopPropagation();
         });
-        
-        
-        
+
+
+
         /**
         *初始化拖拽搜索列表
         */
         var oSelectEngines = $("selectEngine");
-        each(aEngines,function(){
-            oSelectEngines.options.add(new Option(this.name,this.id));
+        each(aEngines, function() {
+            oSelectEngines.options.add(new Option(this.name, this.id));
         });
-        
 
-        
+
+
         oSelectEngines.selectedIndex = getIndexByValue(getData("dragengine"));
-         
-         addEvent(oSelectEngines,"change",function(){
-            saveData("dragengine",this.value);
-         });
-         
-         
-         
-         function getIndexByValue(value){
-         var ret = 0;
-         each(oSelectEngines.options,function(i,x){
-         if(this.value == value){
-         ret = i;
-         return false;
-         }
-         });
-         
-          return  ret;
-         }
-         
-         
-         /**
-         *超级拖拽
-         */       
-         var oDragImages = document.getElementsByName("imageview");
-         each(oDragImages,function(){
-         addEvent(this,"click",function(){
-            saveData("dragImageDisplayMode",this.value);          
-         });
-         });
-         
-         getElmentByValue(oDragImages,getData("dragImageDisplayMode")).checked = true;
-         
-         var oDragLinks = document.getElementsByName("linkview");
-         each(oDragLinks,function(){
-         addEvent(this,"click",function(){
-            saveData("dragLinkDisplayMode",this.value);           
-         });
-         });
-         
-         getElmentByValue(oDragLinks,getData("dragLinkDisplayMode")).checked = true;;
-         
-         function getElmentByValue(ele,value){
-         var ret = ele[0];
-         each(ele,function(){
-         if(this.value == value) {
-         ret = this;
-         return false;
-         }
-         });
-         return ret;
-         }
+
+        addEvent(oSelectEngines, "change", function() {
+            saveData("dragengine", this.value);
+        });
+
+
+
+        function getIndexByValue(value) {
+            var ret = 0;
+            each(oSelectEngines.options, function(i, x) {
+                if (this.value == value) {
+                    ret = i;
+                    return false;
+                }
+            });
+
+            return ret;
+        }
+
+
+        /**
+        *超级拖拽
+        */
+        var oDragImages = document.getElementsByName("imageview");
+        each(oDragImages, function() {
+            addEvent(this, "click", function() {
+                saveData("dragImageDisplayMode", this.value);
+            });
+        });
+
+        getElmentByValue(oDragImages, getData("dragImageDisplayMode")).checked = true;
+
+        var oDragLinks = document.getElementsByName("linkview");
+        each(oDragLinks, function() {
+            addEvent(this, "click", function() {
+                saveData("dragLinkDisplayMode", this.value);
+            });
+        });
+
+        getElmentByValue(oDragLinks, getData("dragLinkDisplayMode")).checked = true; ;
+
+        function getElmentByValue(ele, value) {
+            var ret = ele[0];
+            each(ele, function() {
+                if (this.value == value) {
+                    ret = this;
+                    return false;
+                }
+            });
+            return ret;
+        }
 
 
         /**

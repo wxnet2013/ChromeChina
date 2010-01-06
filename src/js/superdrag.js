@@ -16,6 +16,11 @@ dragEnd(function(e) {
         onTextDrag(e);
 });
 
+dragOver(function(e) {
+    //改变鼠标光标
+    e.preventDefault();
+});
+
 /**
 *拖拽文本
 */

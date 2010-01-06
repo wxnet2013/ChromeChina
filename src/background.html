@@ -47,10 +47,19 @@
                 charset: "gb2312",
                 pic: "images/wiki.jpg",
                 isused: true
+            },
+            {
+                id: 5,
+                orderId: 5,
+                name: "手气不错",
+                url: "http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=",
+                charset: "gb2312",
+                pic: "images/wiki.jpg",
+                isused: true
             }
         ];
-        
-        
+
+
     var msg = {};
 
     var xhr = null;
@@ -108,12 +117,18 @@
             sendResponse({
                 searchshow: (localStorage["showsearch"] || "newwindow"),
                 engines: (localStorage["engines"] || JSON.stringify(engines_)),
-                dragengine:(localStorage["dragengine"] || 0),
-                dragImageDisplayMode:(localStorage["dragImageDisplayMode"] || "imageview"),
-                dragLinkDisplayMode:(localStorage["dragLinkDisplayMode"] || "newwindow")
+                dragengine: (localStorage["dragengine"] || 0),
+                dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
+                dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow")
             });
         else
             sendResponse({});
     });
+
+
+    if (localStorage['firstrun'] !== true) {
+        chrome.tabs.create({ url: chrome.extension.getURL('options.html'), selected: true });
+        localStorage['firstrun'] = true;
+    }
 </script>
 
