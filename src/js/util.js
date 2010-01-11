@@ -102,7 +102,7 @@ function createImageButton(src, id, salt) {
 /**
 *获取选择的文本
 */
-function getSelectText(e) {
+function getSelectText() {
     return window.getSelection ? window.getSelection().toString() : document.selection.createRange().text;
 }
 

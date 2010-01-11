@@ -69,6 +69,7 @@ var displayMode = {
 
 function search(opt) {
     displayMode[searchResultDisplayMode](engines_[opt].url.replace(/\{s\}/, encodeByType(engines_[opt].charset, selectText)));
+    selectText = "";
 }
 
 

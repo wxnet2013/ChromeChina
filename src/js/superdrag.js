@@ -9,7 +9,7 @@ dragEnd(function(e) {
     }
 
     if (isLink(e)) {
-        onLinkDrag(parent(e.target).href);
+        onLinkDrag(parent(e.target).href || parent(e.target, 2).href);
     }
 
     if (isText(e))
@@ -32,21 +32,21 @@ function onTextDrag(e) {
 *拖拽链接
 */
 function onLinkDrag(src) {
-    show(dragLinkDisplayMode,src);
+    show(dragLinkDisplayMode, src);
 }
 
 /**
 *拖拽图像
 */
 function onImageDrag(src) {
-    show(dragImageDisplayMode,src);
+    show(dragImageDisplayMode, src);
 }
 
 /**
 *拖拽的是链接
 */
 function isLink(e) {
-    return e.target.nodeType == 3 && parent(e.target).tagName == "A" && parent(e.target).href;
+    return e.target.nodeType == 3 && ((parent(e.target).tagName == "A" && parent(e.target).href) || (parent(e.target, 2).tagName == "A" && parent(e.target, 2).href)) && getSelectText() == "";
 }
 
 function isImg(e) {
@@ -57,6 +57,6 @@ function isText(e) {
     return !isLink(e) && !isImg(e) && selectText != "";
 }
 
-function show(mode,src) {
+function show(mode, src) {
     displayMode[mode](src);
 }
