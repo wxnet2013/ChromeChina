@@ -1,0 +1,55 @@
+#view-cmenu
+{
+    position: absolute;
+    border: 1px solid #b8b8b8;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 1px;
+    top: 100px;
+    left: 100px;
+    width: 166px;
+    z-index: 888;
+    list-style-type: none;
+    text-align: left;
+}
+
+#view-cmenu:focus
+{
+    outline: none;
+}
+
+.view-cmenu-item
+{
+    margin: 0;
+    padding: 5px 7px;
+    cursor: default;
+    font-size: 15px;
+    font-family: simsun, arial, san-serif;
+    color: #161616;
+    -webkit-user-select: none;
+}
+
+.splitline
+{
+    border-bottom: 1px solid #bfbfbf;
+}
+
+.view-cmenu-item:hover
+{
+    background-color: #3399fe;
+}
+
+#view-cmenu a
+{
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #000;
+    cursor: default;
+}
+
+.view-hidden
+{
+    visibility: hidden;
+}
