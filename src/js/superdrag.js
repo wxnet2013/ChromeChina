@@ -1,8 +1,15 @@
 ﻿/**
 *超级拖拽
 */
-dragEnd(function(e) {
-    selectText = getSelectText(e);
+dragDrop(function(e) {
+    var data = e.dataTransfer.getData('URL');
+
+    if (!data) {
+        data = e.dataTransfer.getData('Text');
+
+    }
+
+    selectText = data;
 
     if (isImg(e)) {
         onImageDrag(e.target.src);
