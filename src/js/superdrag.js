@@ -8,7 +8,6 @@ dragDrop(function(e) {
         data = e.dataTransfer.getData('Text');
 
     }
-
     selectText = data;
 
     if (isImg(e)) {

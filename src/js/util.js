@@ -135,7 +135,7 @@ function dragEnd(fn) {
 }
 
 function dragDrop(fn) {
-    addEvent(document, "dragdrop", fn);
+    addEvent(document, "drop", fn);
 }
 
 function dragOver(fn) {
