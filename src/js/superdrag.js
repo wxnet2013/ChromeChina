@@ -1,25 +1,30 @@
 ﻿/**
 *超级拖拽
 */
-dragDrop(function(e) {
-    var data = e.dataTransfer.getData('URL');
-
-    if (!data) {
-        data = e.dataTransfer.getData('Text');
-
-    }
-    selectText = data;
-
+var isDragImg = false;
+dragEnd(function(e) {
     if (isImg(e)) {
+        isDragImg = true;
         onImageDrag(e.target.src);
+        return;
     }
+    isDragImg = false;
+});
 
-    if (isLink(e)) {
-        onLinkDrag(parent(e.target).href || parent(e.target, 2).href);
+dragDrop(function(e) {
+    if (isDragImg) return;
+    var data = e.dataTransfer.getData('URL');
+    if (data) {
+        selectText = data;
+        onLinkDrag(data);
+        return;
     }
-
-    if (isText(e))
+    data = e.dataTransfer.getData('Text');
+    if (data) {
+        selectText = data;
         onTextDrag(e);
+        return;
+    }
 });
 
 dragOver(function(e) {
@@ -49,18 +54,10 @@ function onImageDrag(src) {
 }
 
 /**
-*拖拽的是链接
+*拖拽的是图片
 */
-function isLink(e) {
-    return e.target.nodeType == 3 && ((parent(e.target).tagName == "A" && parent(e.target).href) || (parent(e.target, 2).tagName == "A" && parent(e.target, 2).href)) && getSelectText() == "";
-}
-
 function isImg(e) {
     return e.target.tagName == "IMG";
-}
-
-function isText(e) {
-    return !isLink(e) && !isImg(e) && selectText != "";
 }
 
 function show(mode, src) {
