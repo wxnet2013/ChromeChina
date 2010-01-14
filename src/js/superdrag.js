@@ -13,16 +13,20 @@ dragEnd(function(e) {
 
 dragDrop(function(e) {
     if (isDragImg) return;
-    var data = e.dataTransfer.getData('URL');
+    /**
+    * 不使用e.dataTransfer.getData('TEXT')获取选择文本，
+    * 可以拖拽链接上选中的文本
+    */
+    selectText = getSelectText(e);
+    if (selectText) {
+        onTextDrag(e);
+        return;
+    }
+
+    data = e.dataTransfer.getData('URL');
     if (data) {
         selectText = data;
         onLinkDrag(data);
-        return;
-    }
-    data = e.dataTransfer.getData('Text');
-    if (data) {
-        selectText = data;
-        onTextDrag(e);
         return;
     }
 });
