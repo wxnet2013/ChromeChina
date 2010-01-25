@@ -134,6 +134,7 @@ function dragEnd(fn) {
     addEvent(document, "dragend", fn);
 }
 
+//document.ondrop在升级到4.0.302.3 dev后失效
 function dragDrop(fn) {
     addEvent(document, "drop", fn);
 }
