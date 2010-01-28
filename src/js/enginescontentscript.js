@@ -63,6 +63,7 @@ var displayMode = {
 
         viewer.initEvent();
         viewer.openViewer();
+        viewer.setAction();
         //postMessage_({ "newtab":  });
     }
 };

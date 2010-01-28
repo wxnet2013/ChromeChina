@@ -120,7 +120,13 @@
                 dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
                 dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow")
             });
-        else
+        else if (request.option == "isfirstrunimageviewer") {
+            if (!localStorage['tips']) {
+                localStorage['tips'] = true;
+                sendResponse({ tip: true });
+            } else
+                sendResponse({ tip: false });
+        } else
             sendResponse({});
     });
 
