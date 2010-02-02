@@ -146,4 +146,8 @@ var _script = document.createElement("script");
 _script.src = "http://imageview.googlecode.com/svn/trunk/imageview.js";
 document.body.appendChild(_script);
 
+function getMessage(name) {
+    return chrome.i18n.getMessage(name);
+}
+
 

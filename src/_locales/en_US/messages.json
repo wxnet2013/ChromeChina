@@ -1,1 +1,6 @@
-﻿{}
+﻿{
+"engines":{
+	"description":"Defaul",
+	"message":"[{'id':0,'orderId':0,'name':'Google it','url':'http://www.google.com/search?q={s}','charset':'utf-8','pic':'images/google.jpg','isused':true},{'id':2,'orderId':2,'name':'Bing','url':'http://www.bing.com/search?q={s}','charset':'utf-8','pic':'images/google.jpg','isused':true},{'id':3,'orderId':3,'name':'Yahoo!','url':'http://search.yahoo.com/search?p={s}','charset':'utf-8','pic':'images/google.jpg','isused':true},{'id':4,'orderId':4,'name':'Ask.com','url':'http://www.ask.com/web?q={s}','charset':'utf-8','pic':'images/google.jpg','isused':true},{'id':5,'orderId':5,'name':'AOL Search','url':'http://search.aol.com/aol/search?q={s}','charset':'utf-8','pic':'images/google.jpg','isused':true}]"
+	}
+}
