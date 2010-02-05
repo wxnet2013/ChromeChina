@@ -1,6 +1,6 @@
 ﻿{
 "name":"QuickSearch",
-"version":"1.8.0",
+"version":"1.9.0",
 "description":"超级拖拽功能、将自定义的搜索引擎添加到右键菜单中.",
 "background_page": "background.html",
    "icons": {
@@ -9,7 +9,7 @@
 "content_scripts": [
   {
 	"css": ["css/content.css"],
-	"js": ["js/core.js", "js/util.js", "js/encodeToGb2312.js", "js/imageview.js",	"js/enginescontentscript.js", "js/savecontentscript.js","js/superdrag.js"],
+	"js": ["js/core.js", "js/imageview.js", "js/util.js","js/actions.js", "js/encodeToGb2312.js", "js/enginescontentscript.js", "js/savecontentscript.js","js/superdrag.js"],
     	"matches": ["http://*/*", "https://*/*"],
         "run_at": "document_start"
   }

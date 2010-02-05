@@ -7,6 +7,10 @@
 
     <script type="text/javascript" src="js/util.js"></script>
 
+    <script type="text/javascript" src="js/dialog.js"></script>
+
+    <script type="text/javascript" src="js/messages.js"></script>
+
     <style type="text/css">
         .center
         {
@@ -50,55 +54,47 @@
             background: url(images/ico_video3.gif) no-repeat 100% 50%;
             padding-right: 17px;
         }
-    </style>
-
-    <script type="text/javascript">
-
-        var $ = tx.dom.$, addEvent = tx.event.addEvent, each = tx.util.each, before = tx.dom.before, tag = tx.dom.tag, getParent = tx.dom.getParent;
-        function dialog() {
-            this.dialogbody = null;
-            this.bulid_();
-            addEvent(this.dialogbody, "click", function(e) {
-                e.stopPropagation();
-            });
-            var self = this;
-            addEvent(document, "click", function(e) {
-                self.dialogbody.style.display = "none";
-            });
+        #header ul
+        {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-left: 60px;
         }
-
-        dialog.prototype = {
-            bulid_: function() {
-                if ($("dialog")) {
-                    this.dialogbody = $("dialog");
-                    return;
-                }
-                var odiv = document.createElement("div");
-                odiv.className = "dialog";
-                odiv.id = "dialog";
-                var oifr = document.createElement("iframe");
-                oifr.style.cssText += ";width: 100%; height: 100%; border: 0px;";
-                odiv.appendChild(oifr);
-                document.body.appendChild(odiv);
-                this.dialogbody = odiv;
-            },
-            close: function() {
-                this.dialogbody.style.display = "none";
-            },
-            open: function(src) {
-                tag("iframe", this.dialogbody)[0].src = src;
-                this.dialogbody.style.display = "block";
-            },
-            left: function(num) {
-                this.dialogbody.style.left = num + "px";
-            },
-            top: function(num) {
-                this.dialogbody.style.top = num + "px";
-            }
-        };
-        
-    </script>
-
+        #header li
+        {
+            float: left;
+            border: 1px solid;
+            border-bottom-width: 0;
+            margin: 0 0.5em 0 0;
+        }
+        #header a
+        {
+            display: block;
+            padding: 0 1em;
+            text-decoration: none;
+        }
+        #header li.selected
+        {
+            position: relative;
+            top: 1px;
+            background: white;
+        }
+        .cur
+        {
+            border-top: 1px solid;
+            clear: both;
+            padding-left: 60px;
+        }
+        .cur select
+        {
+            width: 180px;
+        }
+        .hide
+        {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <fieldset class="center">
@@ -123,31 +119,87 @@
         </select>
         <h5>
             显示搜索结果:</h5>
-        <input id="search_show_pop" value="pop" type="radio" name="show" checked="checked" /><label
-            for="search_show_pop">弹出</label>
-        <input id="search_show_newtab" value="newtab" type="radio" name="show" /><label for="search_show_newtab">新标签</label>
-        <input id="search_show_newwindow" value="newwindow" type="radio" name="show" /><label
-            for="search_show_newwindow">新窗口</label>
+        <select id="search_show">
+        </select>
     </fieldset>
     <fieldset class="center">
         <legend>超级拖拽</legend>
-        <h5>
-            拖拽图片:</h5>
-        <input id="image_view" value="imageview" type="radio" name="imageview" checked="checked" /><label
-            for="image_view">照片查看器</label>
-        <input id="image_new_tab" type="radio" value="nettab" name="imageview" /><label for="image_new_tab">新标签</label>
-        <input id="image_new_window" type="radio" value="newwindow" name="imageview" /><label
-            for="image_new_window">新窗口</label>
-        <h5>
-            拖拽链接:</h5>
-        <input id="link_popup" type="radio" value="popup" name="linkview" checked="checked" /><label
-            for="link_popup">弹出</label>
-        <input id="link_new_tab" type="radio" value="newtab" name="linkview" /><label for="link_new_tab">新标签</label>
-        <input id="link_new_window" type="radio" value="newwindow" name="linkview" /><label
-            for="link_new_window">新窗口</label>
+        <div id="header">
+            <ul>
+                <li id="fordragimage" class="selected"><a href="#">图片</a></li>
+                <li id="fordraglink"><a href="#">链接</a></li>
+                <li id="fordragtext"><a href="#">选中的文本</a></li>
+            </ul>
+        </div>
+        <div id="dragimage" class="cur">
+            <p>
+                <label for="imageright">
+                    向右:</label><br />
+                <select id="imageright">
+                </select></p>
+            <p>
+                <label for="imageleft">
+                    向左:</label><br />
+                <select id="imageleft">
+                </select></p>
+            <p>
+                <label for="imageup">
+                    向上:</label><br />
+                <select id="imageup">
+                </select></p>
+            <p>
+                <label for="imagedown">
+                    向下:</label><br />
+                <select id="imagedown">
+                </select></p>
+        </div>
+        <div id="draglink" style="display: none;">
+            <p>
+                <label for="linkright">
+                    向右:</label><br />
+                <select id="linkright">
+                </select></p>
+            <p>
+                <label for="linkleft">
+                    向左:</label><br />
+                <select id="linkleft">
+                </select></p>
+            <p>
+                <label for="linkup">
+                    向上:</label><br />
+                <select id="linkup">
+                </select></p>
+            <p>
+                <label for="linkdown">
+                    向下:</label><br />
+                <select id="linkdown">
+                </select></p>
+        </div>
+        <div id="dragtext" style="display: none;">
+            <p>
+                <label for="textright">
+                    向右:</label><br />
+                <select id="textright">
+                </select></p>
+            <p>
+                <label for="textleft">
+                    向左:</label><br />
+                <select id="textleft">
+                </select></p>
+            <p>
+                <label for="textup">
+                    向上:</label><br />
+                <select id="textup">
+                </select></p>
+            <p>
+                <label for="textdown">
+                    向下:</label><br />
+                <select id="textdown">
+                </select></p>
+        </div>
     </fieldset>
     <br />
-    <div if="footer" class="center">
+    <div id="footer" class="center">
         <input id="close" type="button" value="关闭" />
     </div>
 
@@ -155,16 +207,6 @@
         $("close").onclick = function() {
             window.close();
         };
-
-
-        //工具条样式
-        var oSearch = document.getElementsByName("show");
-        each(oSearch, function() {
-            addEvent(this, "click", function() {
-                saveData("showsearch", this.value);
-            });
-        });
-        getElmentByValue(oSearch, getData("showsearch")).checked = true;
 
 
         /**
@@ -276,7 +318,6 @@
         /**
         *添加搜索引擎
         */
-
         addEvent($("add"), "click", function(e) {
             var ele = e.target;
             dialogadd = new dialog();
@@ -286,8 +327,6 @@
             e.stopPropagation();
         });
 
-
-
         /**
         *初始化拖拽搜索列表
         */
@@ -296,25 +335,36 @@
             oSelectEngines.options.add(new Option(this.name, this.id));
         });
 
-
-
-        oSelectEngines.selectedIndex = getIndexByValue(getData("dragengine"));
+        oSelectEngines.selectedIndex = getIndexByValue(oSelectEngines, getData("dragengine"));
 
         addEvent(oSelectEngines, "change", function() {
             saveData("dragengine", this.value);
         });
 
 
+        var oSelectShowSearch = $("search_show");
+        each(messages["engine"].option, function(i, v) {
+            oSelectShowSearch.options.add(new Option(v, i));
+        });
 
-        function getIndexByValue(value) {
+        oSelectShowSearch.selectedIndex = getIndexByValue(oSelectShowSearch, getData("showsearch"));
+
+        addEvent(oSelectShowSearch, "change", function() {
+            saveData("showsearch", this.value);
+        });
+
+
+
+
+
+        function getIndexByValue(ele, value) {
             var ret = 0;
-            each(oSelectEngines.options, function(i, x) {
+            each(ele.options, function(i, x) {
                 if (this.value == value) {
                     ret = i;
                     return false;
                 }
             });
-
             return ret;
         }
 
@@ -329,7 +379,7 @@
             });
         });
 
-        getElmentByValue(oDragImages, getData("dragImageDisplayMode")).checked = true;
+        //getElmentByValue(oDragImages, getData("dragImageDisplayMode")).checked = true;
 
         var oDragLinks = document.getElementsByName("linkview");
         each(oDragLinks, function() {
@@ -338,7 +388,7 @@
             });
         });
 
-        getElmentByValue(oDragLinks, getData("dragLinkDisplayMode")).checked = true; ;
+        //getElmentByValue(oDragLinks, getData("dragLinkDisplayMode")).checked = true; ;
 
         function getElmentByValue(ele, value) {
             var ret = ele[0];
@@ -349,6 +399,72 @@
                 }
             });
             return ret;
+        }
+
+
+        var superDrag = {
+            "imageright": "imageviewer",
+            "imageleft": "imageviewer",
+            "imageup": "imageviewer",
+            "imagedown": "imageviewer",
+            "linkright": "newwindow",
+            "linkleft": "newwindow",
+            "linkup": "newwindow",
+            "linkdown": "newwindow",
+            "textright": "newwindow",
+            "textleft": "newwindow",
+            "textup": "newwindow",
+            "textdown": "newwindow"
+        };
+
+        //设置默认值
+        !localStorage["superdrag"] && saveData("superdrag", JSON.stringify(superDrag));
+
+        function loadOption(opt) {
+            var drags = JSON.parse(getData("superdrag"));
+            //加载列表
+            var dragImageOption = messages[opt].option;
+            each("right left up down".split(" "), function(i) {
+                var ele = $(opt + this);
+                each(dragImageOption, function(i, v) {
+                    ele.options.add(new Option(v, i));
+                });
+
+                ele.selectedIndex = getIndexByValue(ele, drags[opt + this]);
+
+                addEvent(ele, "change", saveDragOption);
+            });
+        }
+
+
+        function saveDragOption() {
+            superDrag[this.id] = this.value;
+            console.log(JSON.stringify(superDrag));
+            saveData("superdrag", JSON.stringify(superDrag));
+        }
+
+        loadOption("image");
+        loadOption("link");
+        loadOption("text");
+
+        each(document.querySelectorAll("#header li"), function(i) {
+            addEvent(this, "click", function(e) {
+                hide();
+
+                document.querySelector(".selected").className = "";
+                this.className = "selected";
+
+                $(this.id.replace("for", "")).style.display = "block";
+                addClass($(this.id.replace("for", "")), "cur");
+                e.preventDefault();
+            });
+        });
+
+        function hide() {
+            each("dragimage dragtext draglink".split(" "), function() {
+                var ele = $(this + "");
+                ele.style.display = "none";
+            });
         }
 
 

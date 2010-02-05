@@ -1,4 +1,16 @@
-﻿//util==================================================================================
+﻿/**
+*@fileoverview 一些公共的方法
+*@author 王祥 Email:wxnet2008@gmail.com
+*/
+var addEvent = tx.event.addEvent,
+    removeEvent = tx.event.removeEvent,
+    tag = tx.dom.tag,
+    remove = tx.dom.remove,
+    $ = tx.dom.$,
+    parent = tx.dom.getParent,
+    removeClass = tx.style.removeClass,
+    each = tx.util.each;
+
 /**
 *向后台文件发送请求并获得响应
 *@private
@@ -142,9 +154,6 @@ function dragDrop(fn) {
 function dragOver(fn) {
     addEvent(document, "dragover", fn);
 }
-var _script = document.createElement("script");
-_script.src = "http://imageview.googlecode.com/svn/trunk/imageview.js";
-document.body.appendChild(_script);
 
 function getMessage(name) {
     return chrome.i18n.getMessage(name);

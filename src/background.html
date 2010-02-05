@@ -1,4 +1,5 @@
 ﻿<script src="js/util.js"></script>
+
 <script type="text/javascript">
     /**
     *预定义的搜索引擎
@@ -7,29 +8,28 @@
 
     var msg = {};
 
+    /*
     var xhr = null;
     function HandleStateChange() {
-        if (xhr.readyState == 4) {
-            var jsontext = xhr.responseText;
-            alert(jsontext);
-        }
+    if (xhr.readyState == 4) {
+    var jsontext = xhr.responseText;
+    alert(jsontext);
+    }
     }
 
     function sendText(par) {
-        var param = [];
-        param.push("title=" + par.title);
-        param.push("url=" + par.url);
-        param.push("text=" + par.text);
+    var param = [];
+    param.push("title=" + par.title);
+    param.push("url=" + par.url);
+    param.push("text=" + par.text);
 
         xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://text.com/receive.aspx", true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
-        xhr.onreadystatechange = HandleStateChange;
-        xhr.send(param.join("&"));
+    xhr.open("POST", "http://text.com/receive.aspx", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+    xhr.onreadystatechange = HandleStateChange;
+    xhr.send(param.join("&"));
     }
-
-
-
+    */
     //接收content script的消息
     chrome.extension.onConnect.addListener(function(port) {
         var tab = port.sender.tab;
@@ -43,18 +43,34 @@
                 msg.title = info.title;
                 msg.url = info.url;
             } else if (info.newtab) {
-                chrome.tabs.create({ url: info.newtab });
+                chrome.tabs.create(info.newtab);
             } else if (info.newwindow) {
                 chrome.windows.create({
-                    top: info.top,
-                    left: info.left,
-                    width: info.width,
-                    height: info.height,
+                    left: parseInt(info.left),
+                    top: parseInt(info.top),
+                    width:  parseInt(info.width),
+                    height: parseInt(info.height),
                     url: info.newwindow
                 });
             }
         });
     });
+
+
+    var superDrag = {
+        "imageright": "imageviewer",
+        "imageleft": "imageviewer",
+        "imageup": "imageviewer",
+        "imagedown": "imageviewer",
+        "linkright": "newwindow",
+        "linkleft": "newwindow",
+        "linkup": "newwindow",
+        "linkdown": "newwindow",
+        "textright": "newwindow",
+        "textleft": "newwindow",
+        "textup": "newwindow",
+        "textdown": "newwindow"
+    };
 
     //接收content script 的请求
     chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
@@ -64,7 +80,8 @@
                 engines: (localStorage["engines"] || JSON.stringify(engines_)),
                 dragengine: (localStorage["dragengine"] || 0),
                 dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
-                dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow")
+                dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow"),
+                superdrag: localStorage["superdrag"] || superDrag
             });
         else if (request.option == "isfirstrunimageviewer") {
             if (!localStorage['tips']) {

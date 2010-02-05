@@ -1,96 +1,26 @@
 ﻿/**
-*@fileoverview
+*@fileoverview 右键菜单
 *@author 王祥 Email:wxnet2008@gmail.com
 */
-var domReady = tx.event.domReady,
-    addEvent = tx.event.addEvent,
-    removeEvent = tx.event.removeEvent,
-    tag = tx.dom.tag,
-    remove = tx.dom.remove,
-    $ = tx.dom.$,
-    parent = tx.dom.getParent,
-    each = tx.util.each;
-
-
 var toolbar;
-/**
-*获取所有的搜索引擎
-*/
-var engines_;
 
-//选择的文本
-var selectText = "";
-var menuid = "view-cmenu";
-
-/**
-*配置显示搜索的方式
-*/
-var searchResultDisplayMode;
-var dragEngine;
-var dragImageDisplayMode;
-var dragLinkDisplayMode
-
-/**
-*显示模式
-*/
-var displayMode = {
-    newtab: function(src) {
-        postMessage_({ "newtab": src });
-    },
-    pop: function(src) {
-        var ifr = null;
-        //显示搜索
-        createSearchResultPopup();
-        ifr = getSearchifr();
-        ifr.style.visibility = "hidden";
-        ifr.src = src;
-    },
-    newwindow: function(src) {
-        var screenW = screen.width, screenH = screen.height;
-        postMessage_({
-            "left": (screenW - screenW * (3 / 4)) / 2,
-            "top": (screenH - screenH * (3 / 4)) / 2,
-            "width": screenW * (3 / 4),
-            "height": screenH * (3 / 4),
-            "newwindow": src
-        });
-    },
-    imageview: function(src) {
-        //alert("imageview");
-        var viewer
-        viewer = new imageViewer(new makedom(src));
-        viewer.initUI();
-
-        viewer.initEvent();
-        viewer.openViewer();
-        viewer.setAction();
-        //postMessage_({ "newtab":  });
-    }
-};
-
-function search(opt) {
-    displayMode[searchResultDisplayMode](engines_[opt].url.replace(/\{s\}/, encodeByType(engines_[opt].charset, selectText)));
-    selectText = "";
+function search(opt,action) {
+    var engine = info.engines_[opt];
+    var src = engine.url.replace(/\{s\}/, encodeByType(engine.charset, info.selectText));
+    actions[action](src);
+    info.selectText = "";
 }
 
-
-request_({ option: "getinfo" }, function(opt) {
-    engines_ = JSON.parse(opt.engines);
-    searchResultDisplayMode = opt.searchshow;
-    dragEngine = opt.dragengine;
-    dragImageDisplayMode = opt.dragImageDisplayMode;
-    dragLinkDisplayMode = opt.dragLinkDisplayMode;
-});
-
 var reUrl = /(.*?)\.(com|cn|tel|mobi|net|org|asia|me|com|cn|net|cn|org|cn|gov|cn|hk|tv|biz|cc|name|info|公司|网络|中国)(\/(.*?))?/i;
+
 var view = {
     toolbar: function(showtype) {
         var contentClass = "view-cmenu view-hidden";
         var itemclass = "view-cmenu-item";
 
-        if (!!$(menuid)) return $(menuid);
+        if (!!$("view-cmenu")) return $("view-cmenu");
         var div = document.createElement("ul");
-        div.id = menuid;
+        div.id = "view-cmenu";
         div.className = contentClass;
 
         var li = document.createElement("li");
@@ -106,74 +36,91 @@ var view = {
         li.id = "goto";
         li.className = itemclass + " splitline";
         div.appendChild(li);
-
-        each(engines_, function(i, obj) {
+        var self = this;
+        each(info.engines_, function(i, obj) {
             var button;
             if (this.isused) {
                 var li = document.createElement("li");
                 li.className = itemclass;
                 li.appendChild(document.createTextNode(this.name));
                 div.appendChild(li);
-                registerSearchButtonEvent(li, i);
+                self.registerSearchButtonEvent(li, i);
             }
         });
         document.body.appendChild(div);
         return div;
+    },
+    registerSearchButtonEvent: function(ele, name) {
+        addEvent(ele, "mouseup", function(e) {
+            if (e.button == 0) {
+                e.stopPropagation();
+                search(name, info["menu"].searchResultDisplayMode);
+            }
+        });
     }
 };
 
 /**
-*注册事件
+*快捷菜单
 */
-function registerSearchButtonEvent(ele, name) {
-    addEvent(ele, "mouseup", function(e) {
-        if (e.button == 0) {
-            e.stopPropagation();
-            //searchResultDisplay[searchResultDisplayMode](name);
-            search(name);
+function onContextMenu(e) {
+    if (doNotShowMenu(e)) return;
+    info.selectText = getSelectText(e);
+    if (info.selectText) {
+
+        toolbar = view.toolbar();
+
+        showMenu(toolbar, e, function() {
+            removeClass(toolbar, "view-hidden");
+        });
+
+        var li = toolbar.getElementsByTagName("li")[1];
+        if (reUrl.test(info.selectText)) {
+
+            toolbar.getElementsByTagName("li")[0].className = toolbar.getElementsByTagName("li")[0].className.replace(/splitline/, "");
+
+            li.style.cssText = "display:block;white-space: nowrap;overflow: hidden;";
+            li.innerHTML = "转到" + info.selectText;
+
+            li.onclick = function() {
+                if (info.selectText.indexOf("http") != 0) {
+                    postMessage_({ "newtab": "http://" + info.selectText });
+                } else
+                    postMessage_({ "newtab": info.selectText });
+            };
+        } else {
+            li.style.display = "none";
+            toolbar.getElementsByTagName("li")[0].className += " splitline";
         }
-    });
-}
-
-
-/**
-*生成搜索按钮的dom结构
-*/
-function createSearchResultPopup() {
-    if ($("popwin")) { show($("popwin")); return $("popwin"); }
-    var div = document.createElement("div");
-    div.id = "popwin"
-    div.style.cssText = "z-index:999;position:fixed;top:" + document.documentElement.scrollTop + "px;left:" + getScroll().left + "px;width:100%;height:600px;border:solid 1px #666666;background:#fff url(" + chrome.extension.getURL("images/loading.gif") + ")  center center no-repeat;";
-
-    var oifr = document.createElement("iframe");
-    oifr.style.cssText = "z-index:1000;width:100%;height:100%;visibility:hidden;background:#fff;";
-    oifr.onload = function() {
-        this.style.visibility = "visible";
-    };
-    div.appendChild(oifr);
-    document.body.appendChild(div);
-}
-
-/**
-*创建弹出窗口
-*/
-function getSearchifr() {
-    var oifr = null;
-    var popwin = $("popwin");
-    if (popwin) {
-        oifr = tag("iframe", popwin)[0];
-        return oifr;
+        /**
+        *在查看源文件页面(view-source:http)不去阻止默认的快捷菜单
+        */
+        e.preventDefault();
     }
 }
 
-//按ESC键关闭搜索显示框
-addEvent(document, "keydown", function(e) {
-    switch (e.keyCode) {
-        case 27:
-            hide($("popwin"));
-            break;
+addEvent(document, "contextmenu", onContextMenu);
+
+addEvent(document, "click", function(e) {
+    var menu = $("view-cmenu");
+    if (!!menu && menu.className.indexOf("view-hidden") == -1) {
+        addClass(menu, "view-hidden");
     }
 });
+
+/**
+*禁用自定义快捷菜单的一些情况
+*/
+function doNotShowMenu(e) {
+    if (e.target.tagName.toLowerCase() == "textarea" ||
+        (e.target.tagName.toLowerCase() == "input" && target.type == "text") ||
+        !!document.querySelector("div:first-child.webkit-line-gutter-backdrop")) {
+        return true;
+    }
+}
+
+
+
 
 
 

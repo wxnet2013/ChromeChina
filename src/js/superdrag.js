@@ -1,7 +1,17 @@
 ﻿/**
-*超级拖拽
+*@fileoverview 超级拖拽
+*@author 王祥 Email:wxnet2008@gmail.com
 */
+
 var isDragImg = false;
+//获取拖拽的方向
+var dir;
+dragEnd(function(e) {
+    //设置拖拽的方向
+    dir = mouseDirection(e);
+    log(dir);
+});
+
 dragEnd(function(e) {
     if (isImg(e)) {
         isDragImg = true;
@@ -13,23 +23,23 @@ dragEnd(function(e) {
 
 dragEnd(function(e) {
     if (isDragImg) return;
-     //拖拽文字
+    //拖拽文字
     /**
     * 不使用e.dataTransfer.getData('TEXT')获取选择文本，
     * 可以拖拽链接上选中的文本
     */
-    selectText = getSelectText(e);
-    if (selectText) {
+    info.selectText = getSelectText(e);
+    if (info.selectText) {
         onTextDrag(e);
         return;
     }
-    
+
     //拖拽链接
     data = getlinkhref(e.target);
     //4.0.302.3 dev e.dataTransfer.getData('url') 失效
     //data = e.dataTransfer.getData('url');
     if (data) {
-        selectText = data;
+        info.selectText = data;
         onLinkDrag(data);
         return;
     }
@@ -41,34 +51,6 @@ function getlinkhref(el) {
     else return null;
 }
 
-
-
-/**
-4.0.302.3 dev 失效
-*/
-//dragDrop(function(e) {
-//    if (isDragImg) return;
-
-//    //不使用e.dataTransfer.getData('TEXT')获取选择文本，
-//    // 可以拖拽链接上选中的文本
-
-//    selectText = getSelectText(e);
-//    if (selectText) {
-//        onTextDrag(e);
-//        return;
-//    }
-
-//    alert(selectText);
-
-//    data = e.dataTransfer.getData('URL');
-//    if (data) {
-//        selectText = data;
-//        onLinkDrag(data);
-//        return;
-//    }
-//});
-
-
 dragOver(function(e) {
     //改变鼠标光标 4.0.302.3 dev 失效
     e.preventDefault();
@@ -79,21 +61,75 @@ dragOver(function(e) {
 *拖拽文本
 */
 function onTextDrag(e) {
-    search(dragEngine);
+    var opt = info.drag;
+    switch (dir) {
+        case "left":
+            //alert(actions["newtab"]);
+            search(dragEngine, opt["textleft"]);
+            break;
+        case "right":
+
+            search(dragEngine, opt["textright"]);
+            break;
+        case "up":
+            search(dragEngine, opt["textup"]);
+            break;
+        case "down":
+            search(dragEngine, opt["textdown"]);
+            break;
+    }
 }
 
 /**
 *拖拽链接
 */
 function onLinkDrag(src) {
-    show(dragLinkDisplayMode, src);
+
+    var opt = info.drag;
+    switch (dir) {
+        case "left":
+            //alert(actions["newtab"]);
+            show(opt["linkleft"], src);
+            break;
+        case "right":
+
+            show(opt["linkright"], src);
+            break;
+        case "up":
+            show(opt["linkup"], src);
+            break;
+        case "down":
+            show(opt["linkdown"], src);
+            break;
+    }
+
+    //show(dragLinkDisplayMode, src);
 }
 
 /**
 *拖拽图像
 */
 function onImageDrag(src) {
-    show(dragImageDisplayMode, src);
+
+    var opt = info.drag;
+    switch (dir) {
+        case "left":
+            //alert(actions["newtab"]);
+            show(opt["imageleft"], src);
+            break;
+        case "right":
+
+            show(opt["imageright"], src);
+            break;
+        case "up":
+            show(opt["imageup"], src);
+            break;
+        case "down":
+            show(opt["imagedown"], src);
+            break;
+    }
+
+    //show(dragImageDisplayMode, src);
 }
 
 /**
@@ -104,5 +140,9 @@ function isImg(e) {
 }
 
 function show(mode, src) {
-    displayMode[mode](src);
+    actions[mode](src);
 }
+
+
+
+
