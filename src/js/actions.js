@@ -60,7 +60,8 @@ var actions = {
         viewer.initEvent();
         viewer.openViewer();
         viewer.setAction();
-    }
+    },
+    "nothing": function() { return; }
 };
 
 
