@@ -4,7 +4,7 @@
 */
 var toolbar;
 
-function search(opt,action) {
+function search(opt, action) {
     var engine = info.engines_[opt];
     var src = engine.url.replace(/\{s\}/, encodeByType(engine.charset, info.selectText));
     actions[action](src);
@@ -84,9 +84,9 @@ function onContextMenu(e) {
 
             li.onclick = function() {
                 if (info.selectText.indexOf("http") != 0) {
-                    postMessage_({ "newtab": "http://" + info.selectText });
+                    postMessage_({ "newtab": { url: "http://" + info.selectText} });
                 } else
-                    postMessage_({ "newtab": info.selectText });
+                    postMessage_({ "newtab": { url: info.selectText} });
             };
         } else {
             li.style.display = "none";
