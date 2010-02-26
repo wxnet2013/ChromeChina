@@ -17,7 +17,7 @@ var messages = {
             "newtab": "在前台新标签中打开搜索",
             "newbackgroundtab": "在后台新标签中打开搜索",
             "newwindow": "在新窗口中打开搜索",
-	    "nothing":"无操作"
+	        "nothing":"无操作"
         }
     },
     "image": {
@@ -27,7 +27,7 @@ var messages = {
             "newtab": "在前台新标签中查看图片",
             "newbackgroundtab": "在后台标签中查看图片",
             "newwindow": "在新窗口中查看图片",
-	    "nothing":"无操作"
+	        "nothing":"无操作"
         }
     },
     "link": {
