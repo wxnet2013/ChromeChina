@@ -1,6 +1,6 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
 <gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
   <app appid='hbnilolkabplmbapboheblikgnicdhkh'>
-    <updatecheck codebase='http://searchforchrome.googlecode.com/files/quicksearch-1.9.6.crx' version='1.9.6' />
+    <updatecheck codebase='http://searchforchrome.googlecode.com/files/quicksearch-1.10.0.crx' version='1.10.0' />
   </app>
 </gupdate>

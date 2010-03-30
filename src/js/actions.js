@@ -61,6 +61,9 @@ var actions = {
         viewer.openViewer();
         viewer.setAction();
     },
+    "editimage": function(src) {
+        postMessage_({ "newtab": { url: "http://www.pixlr.com/editor/?image=" + src + "&title=&loc=zh-cn"} });
+    },
     "nothing": function() { return; }
 };
 

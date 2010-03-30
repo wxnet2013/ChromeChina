@@ -8,7 +8,7 @@ var messages = {
             "newtab": "在前台标签中打开搜索",
             "newbackgroundtab": "在后台新标签中打开搜索",
             "newwindow": "在新窗口中打开搜索",
-	    "nothing":"无操作"
+            "nothing": "无操作"
         }
     },
     "text": {
@@ -17,17 +17,18 @@ var messages = {
             "newtab": "在前台新标签中打开搜索",
             "newbackgroundtab": "在后台新标签中打开搜索",
             "newwindow": "在新窗口中打开搜索",
-	        "nothing":"无操作"
+            "nothing": "无操作"
         }
     },
     "image": {
         "description": "拖拽图片:",
         "option": {
             "imageviewer": "在图片查看器中查看图片",
+            "editimage": "在线编辑图片",
             "newtab": "在前台新标签中查看图片",
             "newbackgroundtab": "在后台标签中查看图片",
             "newwindow": "在新窗口中查看图片",
-	        "nothing":"无操作"
+            "nothing": "无操作"
         }
     },
     "link": {
@@ -36,7 +37,7 @@ var messages = {
             "newtab": "在前台新标签中打开链接",
             "newbackgroundtab": "在后台新标签中打开链接",
             "newwindow": "在新窗口中打开链接",
-            "nothing":"无操作"
+            "nothing": "无操作"
         }
     }
 };
