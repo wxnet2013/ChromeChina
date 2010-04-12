@@ -1,104 +1,123 @@
-﻿<script src="js/util.js"></script>
+﻿<!doctype html>
+<html>
+<head>
+</head>
+<body>
+    <script src="js/analytics.js"></script>
 
-<script type="text/javascript">
-    /**
-    *预定义的搜索引擎
-    */
-            var message = "[{\"id\":0,\"orderid\":0,\"name\":\"用谷歌搜索\",\"url\":\"http://www.google.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/google.jpg\",\"isused\":true},{\"id\":1,\"orderid\":1,\"name\":\"用百度搜索\",\"url\":\"http://www.baidu.com/s?ie=utf-8&f=8&wd={s}\",\"charset\":\"utf-8\",\"pic\":\"images/baidu.jpg\",\"isused\":false},{\"id\":2,\"orderid\":2,\"name\":\"必应搜索\",\"url\":\"http://www.bing.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/bing.jpg\",\"isused\":false},{\"id\":3,\"orderid\":3,\"name\":\"谷歌购物\",\"url\":\"http://www.google.cn/products?aq=f&q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/shopping.jpg\",\"isused\":true},{\"id\":4,\"orderid\":4,\"name\":\"百度百科\",\"url\":\"http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true},{\"id\":5,\"orderid\":5,\"name\":\"手气不错\",\"url\":\"http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true}]";       
+    <script src="js/util.js"></script>
+
+    <script type="text/javascript">
+        var message = [
+{ "id": 0, "orderid": 0, "name": "用谷歌搜索", "url": "http://www.google.com.hk/search?q={s}", "charset": "utf-8", "pic": "images/google.jpg", "isused": true },
+{ "id": 1, "orderid": 1, "name": "用百度搜索", "url": "http://www.baidu.com/s?ie=utf-8&f=8&wd={s}", "charset": "utf-8", "pic": "images/baidu.jpg", "isused": false },
+{ "id": 2, "orderid": 2, "name": "必应搜索", "url": "http://www.bing.com/search?q={s}", "charset": "utf-8", "pic": "images/bing.jpg", "isused": false },
+{ "id": 3, "orderid": 3, "name": "谷歌购物", "url": "http://www.google.cn/products?aq=f&q={s}", "charset": "utf-8", "pic": "images/shopping.jpg", "isused": true },
+{ "id": 4, "orderid": 4, "name": "百度百科", "url": "http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}", "charset": "gb2312", "pic": "images/wiki.jpg", "isused": true },
+{ "id": 5, "orderid": 5, "name": "手气不错", "url": "http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=", "charset": "gb2312", "pic": "images/wiki.jpg", "isused": true },
+{ "id": 7, "orderid": 7, "name": "英文翻译成中文", "url": "http://translate.google.cn/#en|zh-CN|{s}", "charset": "utf-8", "pic": "images/google.jpg", "isused": true }
+];
+        /**
+        *预定义的搜索引擎
+        */
+        //var message = "[{\"id\":0,\"orderid\":0,\"name\":\"用谷歌搜索\",\"url\":\"http://www.google.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/google.jpg\",\"isused\":true},{\"id\":1,\"orderid\":1,\"name\":\"用百度搜索\",\"url\":\"http://www.baidu.com/s?ie=utf-8&f=8&wd={s}\",\"charset\":\"utf-8\",\"pic\":\"images/baidu.jpg\",\"isused\":false},{\"id\":2,\"orderid\":2,\"name\":\"必应搜索\",\"url\":\"http://www.bing.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/bing.jpg\",\"isused\":false},{\"id\":3,\"orderid\":3,\"name\":\"谷歌购物\",\"url\":\"http://www.google.cn/products?aq=f&q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/shopping.jpg\",\"isused\":true},{\"id\":4,\"orderid\":4,\"name\":\"百度百科\",\"url\":\"http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true},{\"id\":5,\"orderid\":5,\"name\":\"手气不错\",\"url\":\"http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true}]";
+message = JSON.stringify(message);
         var engines_ = JSON.parse(message);
-    //var engines_ = JSON.parse(getMessage("engines"));
+        //var engines_ = JSON.parse(getMessage("engines"));
+        
+        var msg = {};
 
-    var msg = {};
-
-    /*
-    var xhr = null;
-    function HandleStateChange() {
-    if (xhr.readyState == 4) {
-    var jsontext = xhr.responseText;
-    alert(jsontext);
-    }
-    }
+        /*
+        var xhr = null;
+        function HandleStateChange() {
+        if (xhr.readyState == 4) {
+        var jsontext = xhr.responseText;
+        alert(jsontext);
+        }
+        }
 
     function sendText(par) {
-    var param = [];
-    param.push("title=" + par.title);
-    param.push("url=" + par.url);
-    param.push("text=" + par.text);
+        var param = [];
+        param.push("title=" + par.title);
+        param.push("url=" + par.url);
+        param.push("text=" + par.text);
 
         xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://text.com/receive.aspx", true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
-    xhr.onreadystatechange = HandleStateChange;
-    xhr.send(param.join("&"));
-    }
-    */
-    //接收content script的消息
-    chrome.extension.onConnect.addListener(function(port) {
-        var tab = port.sender.tab;
-        // This will get called by the content script we execute in
-        // the tab as a result of the user pressing the browser action.
-        port.onMessage.addListener(function(info) {
-            if (info.text) {
-                msg.text = info.text;
-                sendText(msg);
-            } else if (info.title) {
-                msg.title = info.title;
-                msg.url = info.url;
-            } else if (info.newtab) {
-                chrome.tabs.create(info.newtab);
-            } else if (info.newwindow) {
-                chrome.windows.create({
-                    left: parseInt(info.left),
-                    top: parseInt(info.top),
-                    width:  parseInt(info.width),
-                    height: parseInt(info.height),
-                    url: info.newwindow
-                });
-            }
-        });
-    });
-
-
-    var superDrag = {
-        "imageright": "imageviewer",
-        "imageleft": "imageviewer",
-        "imageup": "imageviewer",
-        "imagedown": "imageviewer",
-        "linkright": "newwindow",
-        "linkleft": "newwindow",
-        "linkup": "newwindow",
-        "linkdown": "newwindow",
-        "textright": "newwindow",
-        "textleft": "newwindow",
-        "textup": "newwindow",
-        "textdown": "newwindow"
-    };
-
-    //接收content script 的请求
-    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-        if (request.option == "getinfo")
-            sendResponse({
-                searchshow: (localStorage["showsearch"] || "newwindow"),
-                engines: (localStorage["engines"] || JSON.stringify(engines_)),
-                dragengine: (localStorage["dragengine"] || 0),
-                dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
-                dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow"),
-                superdrag: localStorage["superdrag"] || JSON.stringify(superDrag)
+        xhr.open("POST", "http://text.com/receive.aspx", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+        xhr.onreadystatechange = HandleStateChange;
+        xhr.send(param.join("&"));
+        }
+        */
+        //接收content script的消息
+        chrome.extension.onConnect.addListener(function(port) {
+            var tab = port.sender.tab;
+            // This will get called by the content script we execute in
+            // the tab as a result of the user pressing the browser action.
+            port.onMessage.addListener(function(info) {
+                if (info.text) {
+                    msg.text = info.text;
+                    sendText(msg);
+                } else if (info.title) {
+                    msg.title = info.title;
+                    msg.url = info.url;
+                } else if (info.newtab) {
+                    chrome.tabs.create(info.newtab);
+                } else if (info.newwindow) {
+                    chrome.windows.create({
+                        left: parseInt(info.left),
+                        top: parseInt(info.top),
+                        width: parseInt(info.width),
+                        height: parseInt(info.height),
+                        url: info.newwindow
+                    });
+                }
             });
-        else if (request.option == "isfirstrunimageviewer") {
-            if (!localStorage['tips']) {
-                localStorage['tips'] = true;
-                sendResponse({ tip: true });
+        });
+
+
+        var superDrag = {
+            "imageright": "imageviewer",
+            "imageleft": "imageviewer",
+            "imageup": "imageviewer",
+            "imagedown": "imageviewer",
+            "linkright": "newwindow",
+            "linkleft": "newwindow",
+            "linkup": "newwindow",
+            "linkdown": "newwindow",
+            "textright": "newwindow",
+            "textleft": "newwindow",
+            "textup": "newwindow",
+            "textdown": "newwindow"
+        };
+
+        //接收content script 的请求
+        chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+            if (request.option == "getinfo")
+                sendResponse({
+                    searchshow: (localStorage["showsearch"] || "newwindow"),
+                    engines: (localStorage["engines"] || JSON.stringify(engines_)),
+                    dragengine: (localStorage["dragengine"] || 0),
+                    dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
+                    dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow"),
+                    superdrag: localStorage["superdrag"] || JSON.stringify(superDrag)
+                });
+            else if (request.option == "isfirstrunimageviewer") {
+                if (!localStorage['tips']) {
+                    localStorage['tips'] = true;
+                    sendResponse({ tip: true });
+                } else
+                    sendResponse({ tip: false });
             } else
-                sendResponse({ tip: false });
-        } else
-            sendResponse({});
-    });
+                sendResponse({});
+        });
 
 
-    if (!localStorage['firstrun']) {
-        chrome.tabs.create({ url: chrome.extension.getURL('options.html'), selected: true });
-        localStorage['firstrun'] = true;
-    }
-</script>
+        if (!localStorage['firstrun']) {
+            chrome.tabs.create({ url: chrome.extension.getURL('options.html'), selected: true });
+            localStorage['firstrun'] = true;
+        }
+    </script>
 
+</body>
+</html>

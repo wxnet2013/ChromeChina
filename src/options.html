@@ -3,6 +3,8 @@
 <head>
     <title></title>
 
+    <script src="js/analytics.js"></script>
+
     <script type="text/javascript" src="js/core.js"></script>
 
     <script type="text/javascript" src="js/util.js"></script>
@@ -10,6 +12,16 @@
     <script type="text/javascript" src="js/dialog.js"></script>
 
     <script type="text/javascript" src="js/messages.js"></script>
+
+    <script>
+        /**
+        *  Tracks a single button click.  You can use the _trackEvent command
+        *  to track user interactions with different parts of your extension.
+        */
+        function trackButton(button_id) {
+            _gaq.push(['_trackEvent', 'button' + button_id, 'clicked']);
+        }
+    </script>
 
     <style type="text/css">
         .center
@@ -98,8 +110,10 @@
 </head>
 <body>
     <div class="center">
-    <h3>QuickSearch</h3>
-    <h4></h4>
+        <h3>
+            QuickSearch</h3>
+        <h4>
+        </h4>
         <a href="http://code.google.com/p/searchforchrome/issues/list" target="_blank">提交问题</a>
     </div>
     <fieldset class="center">
@@ -217,11 +231,21 @@
             window.close();
         };
 
-
+        var message = [
+{ "id": 0, "orderid": 0, "name": "用谷歌搜索", "url": "http://www.google.com.hk/search?q={s}", "charset": "utf-8", "pic": "images/google.jpg", "isused": true },
+{ "id": 1, "orderid": 1, "name": "用百度搜索", "url": "http://www.baidu.com/s?ie=utf-8&f=8&wd={s}", "charset": "utf-8", "pic": "images/baidu.jpg", "isused": false },
+{ "id": 2, "orderid": 2, "name": "必应搜索", "url": "http://www.bing.com/search?q={s}", "charset": "utf-8", "pic": "images/bing.jpg", "isused": false },
+{ "id": 3, "orderid": 3, "name": "谷歌购物", "url": "http://www.google.cn/products?aq=f&q={s}", "charset": "utf-8", "pic": "images/shopping.jpg", "isused": true },
+{ "id": 4, "orderid": 4, "name": "百度百科", "url": "http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}", "charset": "gb2312", "pic": "images/wiki.jpg", "isused": true },
+{ "id": 5, "orderid": 5, "name": "手气不错", "url": "http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=", "charset": "gb2312", "pic": "images/wiki.jpg", "isused": true },
+{ "id": 7, "orderid": 7, "name": "英文翻译成中文", "url": "http://translate.google.cn/#en|zh-CN|{s}", "charset": "utf-8", "pic": "images/google.jpg", "isused": true }
+];
         /**
         *预定义的搜索引擎
         */
-        var message = "[{\"id\":0,\"orderid\":0,\"name\":\"用谷歌搜索\",\"url\":\"http://www.google.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/google.jpg\",\"isused\":true},{\"id\":1,\"orderid\":1,\"name\":\"用百度搜索\",\"url\":\"http://www.baidu.com/s?ie=utf-8&f=8&wd={s}\",\"charset\":\"utf-8\",\"pic\":\"images/baidu.jpg\",\"isused\":false},{\"id\":2,\"orderid\":2,\"name\":\"必应搜索\",\"url\":\"http://www.bing.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/bing.jpg\",\"isused\":false},{\"id\":3,\"orderid\":3,\"name\":\"谷歌购物\",\"url\":\"http://www.google.cn/products?aq=f&q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/shopping.jpg\",\"isused\":true},{\"id\":4,\"orderid\":4,\"name\":\"百度百科\",\"url\":\"http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true},{\"id\":5,\"orderid\":5,\"name\":\"手气不错\",\"url\":\"http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true}]";
+        //var message = "[{\"id\":0,\"orderid\":0,\"name\":\"用谷歌搜索\",\"url\":\"http://www.google.com.hk/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/google.jpg\",\"isused\":true},{\"id\":1,\"orderid\":1,\"name\":\"用百度搜索\",\"url\":\"http://www.baidu.com/s?ie=utf-8&f=8&wd={s}\",\"charset\":\"utf-8\",\"pic\":\"images/baidu.jpg\",\"isused\":false},{\"id\":2,\"orderid\":2,\"name\":\"必应搜索\",\"url\":\"http://www.bing.com/search?q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/bing.jpg\",\"isused\":false},{\"id\":3,\"orderid\":3,\"name\":\"谷歌购物\",\"url\":\"http://www.google.cn/products?aq=f&q={s}\",\"charset\":\"utf-8\",\"pic\":\"images/shopping.jpg\",\"isused\":true},{\"id\":4,\"orderid\":4,\"name\":\"百度百科\",\"url\":\"http://baike.baidu.com/searchword/?pic=1&sug=1&word={s}\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true},{\"id\":5,\"orderid\":5,\"name\":\"手气不错\",\"url\":\"http://www.google.cn/search?hl=zh-CN&source=hp&q={s}&btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&aq=f&oq=\",\"charset\":\"gb2312\",\"pic\":\"images/wiki.jpg\",\"isused\":true}]";
+
+        message = JSON.stringify(message);
         var engines_ = JSON.parse(message);
         //有时获取不到信息
         //var engines_ = JSON.parse(getMessage("engines"));
@@ -329,6 +353,7 @@
         *添加搜索引擎
         */
         addEvent($("add"), "click", function(e) {
+            trackButton("add");
             var ele = e.target;
             dialogadd = new dialog();
             dialogadd.left(findPos(ele)[0] + ele.offsetWidth / 2);
@@ -514,9 +539,9 @@
             }
         }
     </script>
-    <div class="center">
-    &copy;2010 <a href="http://wangxiang.cnblogs.com/" target="_blank">王祥</a>
-    </div>
 
+    <div class="center">
+        &copy;2010 <a href="http://wangxiang.cnblogs.com/" target="_blank">王祥</a>
+    </div>
 </body>
 </html>

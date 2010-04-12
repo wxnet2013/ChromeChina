@@ -14,9 +14,6 @@ info["menu"] = {};
 //点击右键菜单显示搜索模式
 info["menu"].searchResultDisplayMode = "";
 
-
-
-
 var dragEngine;
 var dragImageDisplayMode;
 var dragLinkDisplayMode;
@@ -37,9 +34,11 @@ request_({ option: "getinfo" }, function(opt) {
 var actions = {
     "newtab": function(src) {
         postMessage_({ "newtab": { url: src} });
+        trackEvent("前台标签", "在新标签打开链接");
     },
     "newbackgroundtab": function(src) {
         postMessage_({ "newtab": { url: src, selected: false} });
+        trackEvent("后台标签", "在后台标签打开链接");
     },
     "closetab": function() { },
     "newwindow": function(src) {
@@ -51,6 +50,7 @@ var actions = {
             "height": screenH * (3 / 4),
             "newwindow": src
         });
+        trackEvent("新窗口", "在新窗口打开链接");
     },
     "closewindow": function() { },
     "imageviewer": function(src) {
@@ -60,11 +60,17 @@ var actions = {
         viewer.initEvent();
         viewer.openViewer();
         viewer.setAction();
+
+        trackEvent("图片查看器", "使用图片查看器浏览图片");
     },
     "editimage": function(src) {
         postMessage_({ "newtab": { url: "http://www.pixlr.com/editor/?image=" + src + "&title=&loc=zh-cn"} });
+        trackEvent("图片编辑", "使用图片编辑器编辑图片");
     },
-    "nothing": function() { return; }
+    "nothing": function() {
+        trackEvent("空操作", "什么都没做");
+        return;
+    }
 };
 
 

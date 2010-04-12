@@ -1,41 +1,59 @@
-﻿<label for="name">
-    name</label><input id="name" type="text" value="" style="width: 230px;" /><br />
-<label for="url">
-    url</label>
-<textarea cols="25" id="url" rows="3" style="width: 230px;"></textarea>
-<br />
-<input id="gb" type="checkbox" />
-<label for="gb">
-    gb23312编码</label>
-<input id="nouse" type="checkbox" />
-<label for="nouse">
-    禁用</label><br />
-<input id="update" type="button" value="更新" /><input id="del" type="button" value="删除" />
+﻿<!doctype html>
+<html>
+<head>
+<style>
+*{
+ margin:0;
+}
+body{
+padding:6px 6px 6px 6px;
+}
+</style>
+</head>
+<body>
 
-<script>
-    var engid = parent.engine.id;
-    function id(ele) {
-        return document.getElementById(ele);
-    }
-    function setValue(ele, value) {
-        ele.value = value;
-    }
-    setValue(id("name"), parent.engine.name);
-    setValue(id("url"), parent.engine.url);
+    <script src="js/analytics.js"></script>
 
-    (parent.engine.charset == "gb2312") ? id("gb").checked = true : id("gb").checked = false;
-    (parent.engine.isused) ? id("nouse").checked = false : id("nouse").checked = true;
+    <label for="name">
+        name</label><input id="name" type="text" value="" style="width: 230px;" /><br />
+    <label for="url">
+        url</label>
+    <textarea cols="25" id="url" rows="3" style="width: 230px;"></textarea>
+    <br />
+    <input id="gb" type="checkbox" />
+    <label for="gb">
+        gb23312编码</label>
+    <input id="nouse" type="checkbox" />
+    <label for="nouse">
+        禁用</label><br />
+    <input id="update" type="button" value="更新" /><input id="del" type="button" value="删除" />
 
-    document.getElementById("update").onclick = function() {
-        parent.engine.id = engid;
-        parent.engine.name = id("name").value;
-        parent.engine.url = id("url").value;
-        parent.engine.charset = id("gb").checked ? "gb2312" : "utf-8";
-        parent.engine.isused = id("nouse").checked ? false : true;
-        parent.engine.updateEngine();
-    };
-    document.getElementById("del").onclick = function() {
-        parent.engine.deleteEngine(engid);
-    };
-</script>
+    <script>
+        var engid = parent.engine.id;
+        function id(ele) {
+            return document.getElementById(ele);
+        }
+        function setValue(ele, value) {
+            ele.value = value;
+        }
+        setValue(id("name"), parent.engine.name);
+        setValue(id("url"), parent.engine.url);
 
+        (parent.engine.charset == "gb2312") ? id("gb").checked = true : id("gb").checked = false;
+        (parent.engine.isused) ? id("nouse").checked = false : id("nouse").checked = true;
+
+        document.getElementById("update").onclick = function() {
+            parent.engine.id = engid;
+            parent.engine.name = id("name").value;
+            parent.engine.url = id("url").value;
+            parent.engine.charset = id("gb").checked ? "gb2312" : "utf-8";
+            parent.engine.isused = id("nouse").checked ? false : true;
+            parent.engine.updateEngine();
+        };
+        document.getElementById("del").onclick = function() {
+            parent.engine.deleteEngine(engid);
+        };
+    </script>
+
+</body>
+</html>

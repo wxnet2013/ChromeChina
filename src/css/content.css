@@ -1,16 +1,19 @@
 #view-cmenu
 {
     position: absolute;
-    border: 1px solid #b8b8b8;
-    background: #f4f4f4;
+    font: 16px SimSun;
+    list-style: none;
+    border: solid 1px #aca899;
+    min-width: 160px;
+    max-width: 250px;
     margin: 0;
-    padding: 1px;
-    top: 100px;
-    left: 100px;
-    width: 166px;
-    z-index: 888;
-    list-style-type: none;
+    padding: 2px 2px 2px 2px;
+    -webkit-box-shadow: 1px 1px 2px hsla(0, 0%, 0%, .5);    
+    -webkit-user-select: none;
     text-align: left;
+    background: #F4F4F4;
+    z-index:999;
+    color: #000;
 }
 
 #view-cmenu:focus
@@ -18,35 +21,56 @@
     outline: none;
 }
 
-.view-cmenu-item
+#view-cmenu li
 {
-    margin: 0;
-    padding: 5px 7px;
-    cursor: default;
-    font-size: 15px;
-    font-family: simsun, arial, san-serif;
-    color: #161616;
-    -webkit-user-select: none;
+    padding: 1px 4px 1px 18px;
+    position: relative;
+    line-height: 1.2em;
+    font-size:16px;
+    vertical-align: middle;
 }
 
-.splitline
+#view-cmenu li:hover
 {
-    border-bottom: 1px solid #bfbfbf;
-}
-
-.view-cmenu-item:hover
-{
-    background-color: #3399fe;
+    color: #fff;
+    background-color: #316ac5 !important;
+    cursor: pointer;
 }
 
 #view-cmenu a
 {
-    display: block;
-    width: 100%;
-    height: 100%;
+    font-size:16px;
     text-decoration: none;
     color: #000;
-    cursor: default;
+}
+
+#view-cmenu li span.underline
+{
+    text-decoration: underline;
+}
+
+#view-cmenu li span.hotkey
+{
+    position: absolute;
+    right: 16px;
+}
+
+
+
+#view-cmenu li:hover a
+{
+    background: #316ac5;
+    color: #fff;
+    cursor: pointer;
+}
+
+#view-cmenu li.line
+{
+    height: 1px;
+    background: #aca899;
+    padding: 0;
+    margin: 3px 0 3px 0;
+    overflow: hidden;
 }
 
 .view-hidden

@@ -159,4 +159,8 @@ function getMessage(name) {
     return chrome.i18n.getMessage(name);
 }
 
+function trackEvent(evt, msg) {
+    _gaq.push(['_trackEvent', evt, msg]);
+}
+
 

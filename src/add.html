@@ -1,19 +1,33 @@
-﻿<label for="name">
-    name</label><input id="name" type="text" value="" /><br />
-<label for="url">
-    url</label><textarea cols="25" id="url" rows="3" style="width: 230px;"></textarea><br />
-<input id="gb" type="checkbox" /><label for="gb">gb2312编码</label><br />
-<input id="add" type="button" value="确定" /><input id="cancel" type="button" value="取消" />
+﻿<!doctype html>
+<html>
+<head>
+<style>
+html{
+ margin:0;
+}
+</style>
+</head>
+<body>
+    <script src="js/analytics.js"></script>
 
-<script>
-    var ourl = document.getElementById("url");
-    var oname = document.getElementById("name");
-    var gb = document.getElementById("gb");
-    document.getElementById("add").onclick = function() {
-        parent.engine.addEngine(oname.value, ourl.value, gb.checked);
-    };
-    document.getElementById("cancel").onclick = function() {
-        parent.engine.cancelAddEngine();
-    };
-</script>
+    <label for="name">
+        name</label><input id="name" type="text" value="" /><br />
+    <label for="url">
+        url</label><textarea cols="25" id="url" rows="3" style="width: 230px;"></textarea><br />
+    <input id="gb" type="checkbox" /><label for="gb">gb2312编码</label><br />
+    <input id="add" type="button" value="确定" /><input id="cancel" type="button" value="取消" />
 
+    <script>
+        var ourl = document.getElementById("url");
+        var oname = document.getElementById("name");
+        var gb = document.getElementById("gb");
+        document.getElementById("add").onclick = function() {
+            parent.engine.addEngine(oname.value, ourl.value, gb.checked);
+        };
+        document.getElementById("cancel").onclick = function() {
+            parent.engine.cancelAddEngine();
+        };
+    </script>
+
+</body>
+</html>

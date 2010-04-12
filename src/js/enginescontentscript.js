@@ -15,38 +15,36 @@ var reUrl = /(.*?)\.(com|cn|tel|mobi|net|org|asia|me|com|cn|net|cn|org|cn|gov|cn
 
 var view = {
     toolbar: function(showtype) {
-        var contentClass = "view-cmenu view-hidden";
-        var itemclass = "view-cmenu-item";
-
         if (!!$("view-cmenu")) return $("view-cmenu");
         var div = document.createElement("ul");
         div.id = "view-cmenu";
-        div.className = contentClass;
+        div.className = "view-hidden";
 
         var li = document.createElement("li");
         li.id = "copy";
-        li.className = itemclass + " splitline";
-        li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制(C)<span style='float:right'>Ctrl+C</span></a> ";
+        li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制</a>(<span class=\"underline\">C</span>)<span class=\"hotkey\">Ctrl+C</span>";
         div.appendChild(li);
 
-        /**
-        *显示“转到url”的容器
-        */
         li = document.createElement("li");
         li.id = "goto";
-        li.className = itemclass + " splitline";
+        li.style.display = "none";
         div.appendChild(li);
+
+        li = document.createElement("li");
+        li.className = "line";
+        div.appendChild(li);
+
         var self = this;
         each(info.engines_, function(i, obj) {
             var button;
             if (this.isused) {
                 var li = document.createElement("li");
-                li.className = itemclass;
                 li.appendChild(document.createTextNode(this.name));
                 div.appendChild(li);
                 self.registerSearchButtonEvent(li, i);
             }
         });
+
         document.body.appendChild(div);
         return div;
     },
@@ -67,20 +65,15 @@ function onContextMenu(e) {
     if (doNotShowMenu(e)) return;
     info.selectText = getSelectText(e);
     if (info.selectText) {
-
         toolbar = view.toolbar();
-
         showMenu(toolbar, e, function() {
             removeClass(toolbar, "view-hidden");
         });
-
-        var li = toolbar.getElementsByTagName("li")[1];
+        var li = document.getElementById("goto");
         if (reUrl.test(info.selectText)) {
-
-            toolbar.getElementsByTagName("li")[0].className = toolbar.getElementsByTagName("li")[0].className.replace(/splitline/, "");
-
             li.style.cssText = "display:block;white-space: nowrap;overflow: hidden;";
-            li.innerHTML = "转到" + info.selectText;
+            li.innerHTML = "转到 " + info.selectText;
+            li.style.display = "";
 
             li.onclick = function() {
                 if (info.selectText.indexOf("http") != 0) {
@@ -90,8 +83,8 @@ function onContextMenu(e) {
             };
         } else {
             li.style.display = "none";
-            toolbar.getElementsByTagName("li")[0].className += " splitline";
         }
+        trackEvent("右键菜单", "使用右键菜单");
         /**
         *在查看源文件页面(view-source:http)不去阻止默认的快捷菜单
         */
