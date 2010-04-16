@@ -1,7 +1,7 @@
 ﻿{
-"name":"QuickSearch",
-"version":"1.10.2",
-"description":"超级拖拽、图片查看器、图片编辑器、向右键菜单中添加自定义的搜索引擎.",
+"name":"谷歌浏览器中国版(QuickSearch)",
+"version":"2.0.0",
+"description":"谷歌浏览器中国版：超级拖拽、图片查看器、图片编辑器、视频独立播放、向右键菜单中添加自定义的搜索引擎.",
 "background_page": "background.html",
    "icons": {
       "128": "images/search-icon-128x128.png"
@@ -9,7 +9,7 @@
 "content_scripts": [
   {
 	"css": ["css/content.css"],
-	"js": ["js/core.js", "js/imageview.js","js/analytics.js", "js/util.js","js/actions.js", "js/encodeToGb2312.js", "js/enginescontentscript.js", "js/savecontentscript.js","js/superdrag.js"],
+	"js": ["js/core.js", "js/imageview.js","js/analytics.js", "js/util.js","js/actions.js", "js/encodeToGb2312.js", "js/enginescontentscript.js", "js/savecontentscript.js","js/superdrag.js","js/video.js"],
     	"matches": ["http://*/*", "https://*/*"],
         "run_at": "document_start"
   }
