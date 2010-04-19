@@ -22,7 +22,7 @@ var view = {
 
         var li = document.createElement("li");
         li.id = "copy";
-        li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制</a>(<span class=\"underline\">C</span>)<span class=\"hotkey\">Ctrl+C</span>";
+        li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制(<span class=\"underline\">C</span>)<span class=\"hotkey\">Ctrl+C</span></a>";
         div.appendChild(li);
 
         li = document.createElement("li");
