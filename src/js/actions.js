@@ -17,13 +17,15 @@ info["menu"].searchResultDisplayMode = "";
 var dragEngine;
 var dragImageDisplayMode;
 var dragLinkDisplayMode;
+var enablecontextmenu;
 
-request_({ option: "getinfo" }, function(opt) {
+request_({ option: "getinfo" }, function (opt) {
     info.engines_ = JSON.parse(opt.engines);
     info["menu"].searchResultDisplayMode = opt.searchshow;
     dragEngine = opt.dragengine;
     dragImageDisplayMode = opt.dragImageDisplayMode;
     dragLinkDisplayMode = opt.dragLinkDisplayMode;
+    enablecontextmenu = opt.enablecontextmenu;
     info.drag = JSON.parse(opt.superdrag);
 });
 

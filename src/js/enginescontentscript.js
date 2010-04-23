@@ -14,7 +14,7 @@ function search(opt, action) {
 var reUrl = /(.*?)\.(com|cn|tel|mobi|net|org|asia|me|com|cn|net|cn|org|cn|gov|cn|hk|tv|biz|cc|name|info|公司|网络|中国)(\/(.*?))?/i;
 
 var view = {
-    toolbar: function(showtype) {
+    toolbar: function (showtype) {
         if (!!$("view-cmenu")) return $("view-cmenu");
         var div = document.createElement("ul");
         div.id = "view-cmenu";
@@ -35,7 +35,7 @@ var view = {
         div.appendChild(li);
 
         var self = this;
-        each(info.engines_, function(i, obj) {
+        each(info.engines_, function (i, obj) {
             var button;
             if (this.isused) {
                 var li = document.createElement("li");
@@ -48,8 +48,8 @@ var view = {
         document.body.appendChild(div);
         return div;
     },
-    registerSearchButtonEvent: function(ele, name) {
-        addEvent(ele, "mouseup", function(e) {
+    registerSearchButtonEvent: function (ele, name) {
+        addEvent(ele, "mouseup", function (e) {
             if (e.button == 0) {
                 e.stopPropagation();
                 search(name, info["menu"].searchResultDisplayMode);
@@ -66,7 +66,7 @@ function onContextMenu(e) {
     info.selectText = getSelectText(e);
     if (info.selectText) {
         toolbar = view.toolbar();
-        showMenu(toolbar, e, function() {
+        showMenu(toolbar, e, function () {
             removeClass(toolbar, "view-hidden");
         });
         var li = document.getElementById("goto");
@@ -75,7 +75,7 @@ function onContextMenu(e) {
             li.innerHTML = "转到 " + info.selectText;
             li.style.display = "";
 
-            li.onclick = function() {
+            li.onclick = function () {
                 if (info.selectText.indexOf("http") != 0) {
                     postMessage_({ "newtab": { url: "http://" + info.selectText} });
                 } else
@@ -92,14 +92,17 @@ function onContextMenu(e) {
     }
 }
 
-addEvent(document, "contextmenu", onContextMenu);
 
-addEvent(document, "click", function(e) {
-    var menu = $("view-cmenu");
-    if (!!menu && menu.className.indexOf("view-hidden") == -1) {
-        addClass(menu, "view-hidden");
-    }
-});
+
+    addEvent(document, "contextmenu", onContextMenu);
+
+    addEvent(document, "click", function (e) {
+        var menu = $("view-cmenu");
+        if (!!menu && menu.className.indexOf("view-hidden") == -1) {
+            addClass(menu, "view-hidden");
+        }
+    });
+
 
 /**
 *禁用自定义快捷菜单的一些情况
@@ -107,7 +110,7 @@ addEvent(document, "click", function(e) {
 function doNotShowMenu(e) {
     if (e.target.tagName.toLowerCase() == "textarea" ||
         (e.target.tagName.toLowerCase() == "input" && target.type == "text") ||
-        !!document.querySelector("div:first-child.webkit-line-gutter-backdrop")) {
+        !!document.querySelector("div:first-child.webkit-line-gutter-backdrop") || enablecontextmenu == "0") {
         return true;
     }
 }

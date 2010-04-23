@@ -13,7 +13,7 @@ var isMovieMode = (par != "" && par.indexOf("chromemovie") != -1),
 
 if (isMovieMode) {
     //创建空白区域
-    var a = setInterval(function () {
+    var a = setInterval(function() {
         if (document.body) {
             var div = document.createElement("div");
             div.style.cssText += ";position:fixed;left:0;top:0;z-index:9999;width:100%;height:100%;background:#fff url(" + chrome.extension.getURL("images/loading.gif") + ") no-repeat center center;";

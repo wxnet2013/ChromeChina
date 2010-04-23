@@ -2,17 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
-
     <script src="js/analytics.js"></script>
-
     <script type="text/javascript" src="js/core.js"></script>
-
     <script type="text/javascript" src="js/util.js"></script>
-
     <script type="text/javascript" src="js/dialog.js"></script>
-
     <script type="text/javascript" src="js/messages.js"></script>
-
     <script>
         /**
         *  Tracks a single button click.  You can use the _trackEvent command
@@ -22,7 +16,6 @@
             _gaq.push(['_trackEvent', 'button' + button_id, 'clicked']);
         }
     </script>
-
     <style type="text/css">
         .center
         {
@@ -112,10 +105,8 @@
     <div class="center">
         <h3>
             谷歌浏览器中国版(QuickSearch)</h3>
-        <span>
-	作者:王祥 联系:wxnet2013@gmail.com
-        </span>
-        <a href="http://code.google.com/p/searchforchrome/issues/list" target="_blank">提交bug</a>
+        <span>作者:王祥 联系:wxnet2013@gmail.com </span><a href="http://code.google.com/p/searchforchrome/issues/list"
+            target="_blank">提交bug</a>
     </div>
     <fieldset class="center">
         <legend>搜索</legend>
@@ -131,7 +122,10 @@
         <span class="state nouse"></span><span>当前禁用</span>
         <ul id="engines">
         </ul>
-        <input id="add" type="button" value="添加" /><a class="withvideo" target="_blank" href="http://www.cnblogs.com/wangxiang/articles/1647917.html">帮助</a>
+        <input id="add" type="button" value="添加" /><a class="withvideo" target="_blank" href="http://www.cnblogs.com/wangxiang/articles/1647917.html">帮助</a><br />
+        <h5>
+            右键菜单设置</h5>
+        <input type="checkbox" id="enablecontextmenu" checked="checked"/><label for="enablecontextmenu">开启自定义的右键菜单</label>
         <h5>
             显示搜索结果:</h5>
         <select id="search_show">
@@ -226,9 +220,8 @@
     <div id="footer" class="center">
         <input id="close" type="button" value="关闭" />
     </div>
-
     <script type="text/javascript">
-        $("close").onclick = function() {
+        $("close").onclick = function () {
             window.close();
         };
 
@@ -267,7 +260,7 @@
         var dialogupdate, dialogadd; ;
 
         var engine = {
-            addEngine: function(sName, sUrl, isChecked) {
+            addEngine: function (sName, sUrl, isChecked) {
                 aEngines.push({
                     id: aEngines.length,
                     orderId: aEngines.length,
@@ -282,10 +275,10 @@
                 dialogadd.close();
                 this.refreshList();
             },
-            cancelAddEngine: function() {
+            cancelAddEngine: function () {
                 dialogadd.close();
             },
-            deleteEngine: function(id) {
+            deleteEngine: function (id) {
                 var index = 0;
                 for (index; index < aEngines.length; index++) {
                     if (aEngines[index].id == id) break;
@@ -296,7 +289,7 @@
                 dialogupdate.close();
                 this.refreshList();
             },
-            updateEngine: function() {
+            updateEngine: function () {
                 var eng = getEngineById(engine.id);
                 eng.name = engine.name;
                 eng.url = engine.url;
@@ -311,10 +304,10 @@
                 this.refreshList();
                 dialogupdate.close();
             },
-            refreshList: function() {
+            refreshList: function () {
                 var stel = $("jstemplate").innerHTML;
                 var alis = [];
-                each(aEngines, function() {
+                each(aEngines, function () {
                     var str = stel.replace(/\$id/g, "engine_" + this.id).replace(/\$name/, this.name);
                     //添加标注
                     str = this.isused ? str.replace(/\$class/, "use") : str.replace(/\$class/, "nouse");
@@ -323,8 +316,8 @@
                 $("engines").innerHTML = alis.join("");
 
 
-                each(document.getElementsByName("enginel"), function() {
-                    addEvent(this, "click", function(e) {
+                each(document.getElementsByName("enginel"), function () {
+                    addEvent(this, "click", function (e) {
                         var span = tag("span", getParent(this, 1))[0];
                         engine.id = parseInt(span.id.replace(/engine_/, ""));
                         eng = getEngineById(engine.id);
@@ -353,7 +346,7 @@
         /**
         *添加搜索引擎
         */
-        addEvent($("add"), "click", function(e) {
+        addEvent($("add"), "click", function (e) {
             trackButton("add");
             var ele = e.target;
             dialogadd = new dialog();
@@ -367,25 +360,25 @@
         *初始化拖拽搜索列表
         */
         var oSelectEngines = $("selectEngine");
-        each(aEngines, function() {
+        each(aEngines, function () {
             oSelectEngines.options.add(new Option(this.name, this.id));
         });
 
         oSelectEngines.selectedIndex = getIndexByValue(oSelectEngines, getData("dragengine"));
 
-        addEvent(oSelectEngines, "change", function() {
+        addEvent(oSelectEngines, "change", function () {
             saveData("dragengine", this.value);
         });
 
 
         var oSelectShowSearch = $("search_show");
-        each(messages["engine"].option, function(i, v) {
+        each(messages["engine"].option, function (i, v) {
             oSelectShowSearch.options.add(new Option(v, i));
         });
 
         oSelectShowSearch.selectedIndex = getIndexByValue(oSelectShowSearch, getData("showsearch") || "newwindow");
 
-        addEvent(oSelectShowSearch, "change", function() {
+        addEvent(oSelectShowSearch, "change", function () {
             saveData("showsearch", this.value);
         });
 
@@ -395,7 +388,7 @@
 
         function getIndexByValue(ele, value) {
             var ret = 0;
-            each(ele.options, function(i, x) {
+            each(ele.options, function (i, x) {
                 if (this.value == value) {
                     ret = i;
                     return false;
@@ -404,13 +397,18 @@
             return ret;
         }
 
+        addEvent($("enablecontextmenu"), "change", function () {
+            var state = (this.checked == true) ? 1 : 0;
+            saveData("enablecontextmenu", state);
+        })
+
 
         /**
         *超级拖拽
         */
         var oDragImages = document.getElementsByName("imageview");
-        each(oDragImages, function() {
-            addEvent(this, "click", function() {
+        each(oDragImages, function () {
+            addEvent(this, "click", function () {
                 saveData("dragImageDisplayMode", this.value);
             });
         });
@@ -418,8 +416,8 @@
         //getElmentByValue(oDragImages, getData("dragImageDisplayMode")).checked = true;
 
         var oDragLinks = document.getElementsByName("linkview");
-        each(oDragLinks, function() {
-            addEvent(this, "click", function() {
+        each(oDragLinks, function () {
+            addEvent(this, "click", function () {
                 saveData("dragLinkDisplayMode", this.value);
             });
         });
@@ -428,7 +426,7 @@
 
         function getElmentByValue(ele, value) {
             var ret = ele[0];
-            each(ele, function() {
+            each(ele, function () {
                 if (this.value == value) {
                     ret = this;
                     return false;
@@ -465,10 +463,10 @@
             //var drags = JSON.parse(getData("superdrag"));
             //加载列表
             var dragImageOption = messages[opt].option;
-            each("right,left,up,down".split(","), function(i) {
+            each("right,left,up,down".split(","), function (i) {
                 var ele = $(opt + this);
 
-                each(dragImageOption, function(i, v) {
+                each(dragImageOption, function (i, v) {
                     ele.options.add(new Option(v, i));
                 });
 
@@ -488,8 +486,8 @@
         loadOption("link");
         loadOption("text");
 
-        each(document.querySelectorAll("#header li"), function(i) {
-            addEvent(this, "click", function(e) {
+        each(document.querySelectorAll("#header li"), function (i) {
+            addEvent(this, "click", function (e) {
                 hide();
 
                 document.querySelector(".selected").className = "";
@@ -502,7 +500,7 @@
         });
 
         function hide() {
-            each("dragimage dragtext draglink".split(" "), function() {
+            each("dragimage dragtext draglink".split(" "), function () {
                 var ele = $(this + "");
                 ele.style.display = "none";
             });
@@ -540,7 +538,6 @@
             }
         }
     </script>
-
     <div class="center">
         &copy;2010 <a href="http://wangxiang.cnblogs.com/" target="_blank">王祥</a>
     </div>

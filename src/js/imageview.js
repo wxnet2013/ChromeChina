@@ -9,110 +9,128 @@ var Tween={Linear:function(t,b,c,d){return c*t/d+b},Quad:{easeIn:function(t,b,c,
 //fx.js
 (function(){this.FX=function(a,b,c){this.el=f.get(a);this.attributes=b;this.duration=c.duration||0.7;this.tweenType=c.tweenType||"Sine";this.easeType=c.easeType||"easeInOut";this.callback=c.callback||function(){};this.ctx=c.ctx||window;this.frame={},this.endAttr={},this.startAttr={}};this.FX.prototype={start:function(){var b=this;this.getAttributes();this.duration=this.duration*1000;this.time=new Date().getTime();this.animating=true;this.timer=setInterval(function(){var a=new Date().getTime();if(a<(b.time+b.duration)){b.elapsed=a-b.time;b.setCurrentFrame()}else{b.frame=b.endAttr;b.complete()}b.setAttributes()},1)},ease:function(a,e){var c=e-a;var b=a;var d=this.duration;var t=this.elapsed;return Tween[this.tweenType][this.easeType](t,b,c,d)},complete:function(){clearInterval(this.timer);this.timer=null;this.animating=false;this.callback.call(this.ctx)},setCurrentFrame:function(){for(var a in this.startAttr){if(this.startAttr[a]instanceof Array){this.frame[a]=[];for(var i=0;i<this.startAttr[a].length;i++){this.frame[a][i]=this.ease(this.startAttr[a][i],this.endAttr[a][i])}}else{this.frame[a]=this.ease(this.startAttr[a],this.endAttr[a])}}},getAttributes:function(){for(var a in this.attributes){switch(a){case'color':case'background-color':this.startAttr[a]=h(this.attributes[a].from||f.getStyle(this.el,a));this.endAttr[a]=h(this.attributes[a].to);break;case'scrollTop':case'scrollLeft':var b=(this.el==document.body)?(document.documentElement||document.body):this.el;this.startAttr[a]=this.attributes[a].from||b[a];this.endAttr[a]=this.attributes[a].to;break;default:this.startAttr[a]=this.attributes[a].from||(parseFloat(f.getStyle(this.el,a))||0);this.endAttr[a]=this.attributes[a].to;break}}},setAttributes:function(){for(var a in this.frame){switch(a){case'opacity':f.setStyle(this.el,a,this.frame[a]);break;case'scrollLeft':case'scrollTop':var b=(this.el==document.body)?(document.documentElement||document.body):this.el;b[a]=this.frame[a];break;case'color':case'background-color':var c='rgb('+Math.floor(this.frame[a][0])+','+Math.floor(this.frame[a][1])+','+Math.floor(this.frame[a][2])+')';f.setStyle(this.el,a,c);break;default:f.setStyle(this.el,a,this.frame[a]+'px');break}}}};var f={get:function(a){return(typeof a=="string")?document.getElementById(a):a},getStyle:function(a,b){b=g(b);var c=document.defaultView;if(c&&c.getComputedStyle){return a.style[b]||c.getComputedStyle(a,"")[b]||null}else{if(b=='opacity'){var d=a.filters('alpha').opacity;return isNaN(d)?1:(d?d/100:0)}return a.style[b]||a.currentStyle[b]||null}},setStyle:function(a,b,c){if(b=='opacity'){a.style.filter="alpha(opacity="+c*100+")";a.style.opacity=c}else{b=g(b);a.style[b]=c}}};var g=(function(){var d={};return function(c){if(!d[c]){return d[c]=c.replace(/-([a-z])/g,function(a,b){return b.toUpperCase()})}else{return d[c]}}})();var h=function(a){var b=a.match(/^#?(\w{2})(\w{2})(\w{2})$/);if(b&&b.length==4){return[parseInt(b[1],16),parseInt(b[2],16),parseInt(b[3],16)]}b=a.match(/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/);if(b&&b.length==4){return[parseInt(b[1],10),parseInt(b[2],10),parseInt(b[3],10)]}b=a.match(/^#?(\w{1})(\w{1})(\w{1})$/);if(b&&b.length==4){return[parseInt(b[1]+b[1],16),parseInt(b[2]+b[2],16),parseInt(b[3]+b[3],16)]}}})();
 
-var isIE = (document.all) ? true : false;
+(function() {
+    /*
+    Des: (drag)拖拽类
+    Author: cloudgamer
+    Edit By: Kim Wang
+    Inspired by http://www.cnblogs.com/cloudgamer/archive/2008/11/17/Drag.html
+    */
+    var version = "0.0.1";
+    var isIE = (document.all) ? true : false;
 
-var $ = function(id) {
-    return "string" == typeof id ? document.getElementById(id) : id;
-};
+    var $ = function(id) {
+        return "string" == typeof id ? document.getElementById(id) : id;
+    };
 
-var Class = {
-    create: function() {
-        return function() { this.initialize.apply(this, arguments); }
-    }
-}
+    var Class = {
+        create: function() {
+            return function() { this.initialize.apply(this, arguments); }
+        }
+    };
 
-var Extend = function(destination, source) {
-    for (var property in source) {
-        destination[property] = source[property];
-    }
-}
+    var Bind = function(object, fun) {
+        return function() {
+            return fun.apply(object, arguments);
+        }
+    };
 
-var Bind = function(object, fun) {
-    return function() {
-        return fun.apply(object, arguments);
-    }
-}
+    var BindAsEventListener = function(object, fun) {
+        return function(event) {
+            return fun.call(object, (event || window.event));
+        }
+    };
 
-var BindAsEventListener = function(object, fun) {
-    return function(event) {
-        return fun.call(object, (event || window.event));
-    }
-}
-
-function addEventHandler(oTarget, sEventType, fnHandler) {
-    if (oTarget.addEventListener) {
-        oTarget.addEventListener(sEventType, fnHandler, false);
-    } else if (oTarget.attachEvent) {
-        oTarget.attachEvent("on" + sEventType, fnHandler);
-    } else {
-        oTarget["on" + sEventType] = fnHandler;
-    }
-};
-
-function removeEventHandler(oTarget, sEventType, fnHandler) {
-    if (oTarget.removeEventListener) {
-        oTarget.removeEventListener(sEventType, fnHandler, false);
-    } else if (oTarget.detachEvent) {
-        oTarget.detachEvent("on" + sEventType, fnHandler);
-    } else {
-        oTarget["on" + sEventType] = null;
-    }
-};
-
-//拖放程序
-var Drag = Class.create();
-Drag.prototype = {
-    //拖放对象,触发对象
-    initialize: function(drag) {
-        this.Drag = $(drag);
-        this._x = this._y = 0;
-        this._fM = BindAsEventListener(this, this.Move);
-        this._fS = Bind(this, this.Stop);
-        this.Drag.style.position = "absolute";
-        addEventHandler(this.Drag, "mousedown", BindAsEventListener(this, this.Start));
-    },
-    //准备拖动
-    Start: function(oEvent) {
-        this._x = oEvent.clientX - this.Drag.offsetLeft;
-        this._y = oEvent.clientY - this.Drag.offsetTop;
-        addEventHandler(document, "mousemove", this._fM);
-        addEventHandler(document, "mouseup", this._fS);
-
-        if (isIE) {
-            //焦点丢失
-            addEventHandler(this.Drag, "losecapture", this._fS);
-            //设置鼠标捕获
-            this.Drag.setCapture();
+    function addEvent(oTarget, sEventType, fnHandler) {
+        if (oTarget.addEventListener) {
+            oTarget.addEventListener(sEventType, fnHandler, false);
+        } else if (oTarget.attachEvent) {
+            oTarget.attachEvent("on" + sEventType, fnHandler);
         } else {
-            //焦点丢失
-            addEventHandler(window, "blur", this._fS);
-            //阻止默认动作
-            oEvent.preventDefault();
-        };
-        
-        
-        
-    },
-    //拖动
-    Move: function(oEvent) {
-        this.Drag.style.left = oEvent.clientX - this._x + "px";
-        this.Drag.style.top = oEvent.clientY - this._y + "px";
-    },
-    //停止拖动
-    Stop: function(oEvent) {
-        removeEventHandler(document, "mousemove", this._fM);
-        removeEventHandler(document, "mouseup", this._fS);
+            oTarget["on" + sEventType] = fnHandler;
+        }
+    };
 
-        if (isIE) {
-            removeEventHandler(this.Drag, "losecapture", this._fS);
-            this.Drag.releaseCapture();
+    function removeEvent(oTarget, sEventType, fnHandler) {
+        if (oTarget.removeEventListener) {
+            oTarget.removeEventListener(sEventType, fnHandler, false);
+        } else if (oTarget.detachEvent) {
+            oTarget.detachEvent("on" + sEventType, fnHandler);
         } else {
-            removeEventHandler(window, "blur", this._fS);
-        };
-    }
-};
+            oTarget["on" + sEventType] = null;
+        }
+    };
+    //拖放程序
+    this.Drag = Class.create();
+    Drag.prototype = {
+        //拖放对象,触发对象
+        initialize: function(oOpt) {
+            if (!oOpt.drag) return;
+            this.Drag = $(oOpt.drag);
+            this._x = this._y = 0;
+            this._fM = BindAsEventListener(this, this.Move);
+            this._fS = Bind(this, this.Stop);
+            this._Handle = $(oOpt.handle) || this.Drag;
+            this.Drag.style.position = this._Handle.style.position = "absolute";
+            /*
+            事件
+            */
+            //开始移动前触发
+            this.onMoveBegin = oOpt["onMoveBegin"] || function() { };
+            //移动后触发
+            this.onMoveEnd = oOpt["onMoveEnd"] || function() { };
+            this._Handle.style.cursor = "move";
+            addEvent(this._Handle, "mousedown", BindAsEventListener(this, this.Start));
+        },
+        //准备拖动
+        Start: function(oEvent) {
+            this._x = oEvent.clientX - this.Drag.offsetLeft;
+            this._y = oEvent.clientY - this.Drag.offsetTop;
+            addEvent(document, "mousemove", this._fM);
+            addEvent(document, "mouseup", this._fS);
+
+            if (isIE) {
+                //焦点丢失
+                addEvent(this.Drag, "losecapture", this._fS);
+                //设置鼠标捕获
+                this.Drag.setCapture();
+            } else {
+                //焦点丢失
+                addEvent(window, "blur", this._fS);
+                //阻止默认动作
+                oEvent.preventDefault();
+            }
+        },
+        //拖动
+        Move: function(oEvent) {
+            //拖拽时禁止选择
+            window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+
+            this.onMoveBegin();
+            this.Drag.style.left = oEvent.clientX - this._x + "px";
+            this.Drag.style.top = oEvent.clientY - this._y + "px";
+            this.onMoveEnd();
+
+        },
+        //停止拖动
+        Stop: function() {
+            removeEvent(document, "mousemove", this._fM);
+            removeEvent(document, "mouseup", this._fS);
+
+            if (isIE) {
+                removeEvent(this.Drag, "losecapture", this._fS);
+                this.Drag.releaseCapture();
+            } else {
+                removeEvent(window, "blur", this._fS);
+            }
+        }
+    };
+})();
+
+
+
 
 //makedom.js
 function makedom(g) { var h = document.createElement("span"); h.id = "imageview"; var i = document.createElement("div"); i.style.cssText += ";z-index:95;left:0px;top:0px;position:absolute;background-color:#000;"; i.style.filter = "alpha(opacity=50)"; i.style.opacity = "0.5"; i.style.width = dom.getDocumentWidth() + "px"; i.style.height = dom.getDocumentHeight() + "px"; var j = document.createElement("div"); j.style.cssText += ";cursor:pointer;z-index:999;position:fixed;top:3px;left:700px;width:22px;height:22px;;font-weight:bold;font-size:24pt;border:solid #fff 1px;background:url(http://imageview.googlecode.com/svn/trunk/images/close.png) no-repeat 1px 1px"; h.appendChild(j); h.appendChild(i); document.body.appendChild(h); var k = document.createElement("img"); k.src = g; k.style.cssText += ";position:absolute;visibility:hidden;z-index:101;-webkit-border-radius: 5px;-webkit-box-shadow: 0px 0px 19px rgba(0, 0, 0, .5);cursor:move;-webkit-user-select:none;-moz-user-select:none;"; h.appendChild(k); var l = document.createElement("div"); l.style.cssText += ";z-index;105;left:0px;top:0px;position:absolute;display:none;background-color:#000;width:70px;height:35px;text-align:center;line-height:35px;vertical-align:middle;color:#fff;-webkit-user-select:none;-moz-user-select:none;"; l.style.filter = "alpha(opacity=40)"; l.style.opacity = "0.4"; h.appendChild(l); var m = document.createElement("div"); m.style.cssText += ";z-index:110;position:fixed;top:700px;left:0;width:100%;height:70px;background:#8F8F8F;"; h.appendChild(m); var n = document.createElement("ul"); n.style.cssText += ";list-style:none;padding:15px 0 0 0;width:430px;height:40px;margin:0 auto 0 auto;-webkit-user-select:none;-moz-user-select:none;"; m.appendChild(n); var o = { "big": "放大", "small": "缩小", "originally": "1:1", "left": "逆时针", "right": "顺时针", "edit": "编辑", "help": "帮助" }; var p = document.createDocumentFragment(); for (var x in o) { var b = document.createElement("li"); b.style.cssText += ";float:left;font-size:14px;margin:3px;background: #202020;width:50px;height:31px;line-height:31px;vertical-align:middle;text-align:center;margin:4px;-webkit-border-radius:5px;-moz-border-radius:5px;color: #afafaf;cursor:pointer;"; b.id = x; if (x == "left" || x == "right") b.style.width = "62px"; b.innerHTML = o[x]; o[x] = b; p.appendChild(b) } n.appendChild(p); var q = dom.getViewportHeight(); var r = dom.getViewportWidth(); m.style.top = q - m.offsetHeight + "px"; request_({ option: "isfirstrunimageviewer" }, function(a) { if (a.tip) { var b = document.createElement("div"); b.style.cssText += ";z-index:120;overflow:hidden;position:absolute;left:-20000px;height:140px;top:200px;width:300px;padding-left:10px;padding-top:10px;padding-bottom:20px;background:#fff;-webkit-border-radius:5px;"; b.innerHTML = '<h3>小提示:</h3><ol><li>使用鼠标<span style="color:red;">滚轮缩放</span>图片。</li><li><span style="color:red">按ESC键关闭</span>图片查看器。</li><li>使用上下<span style="color:red">方向键缩放</span>图片。</li></ol><input type="button"value="我知道了"id="ok"/><a style="font-size: 13px;margin-left:6px;"href="http://www.cnblogs.com/wangxiang/articles/1657516.html"target="_blank">了解详情</a>'; h.appendChild(b); var c = (dom.getViewportWidth() - b.offsetWidth) / 2 + scrollX(); var d = (dom.getViewportHeight() - b.offsetHeight) / 2 + scrollY(); var f = b.offsetWidth, heightFrom = b.offsetHeight, toWidth = 50, toHeight = 31, leftFrom = c, topFrom = d, leftTo = getPos(o["help"]).x, topTo = getPos(o["help"]).y - 30; setTimeout(function() { addAnimation(b, { "left": { from: leftTo, to: leftFrom }, "top": { from: topTo, to: topFrom }, 'width': { from: toWidth, to: f }, 'height': { from: toHeight, to: heightFrom} }) }, 1000); b.onclick = function(e) { e.preventDefault(); e.stopPropagation() }; document.getElementById("ok").onclick = function(e) { e.preventDefault(); e.stopPropagation(); addAnimation(b, { "left": { from: leftFrom, to: leftTo }, "top": { from: topFrom, to: topTo }, 'width': { from: f, to: toWidth }, 'height': { from: heightFrom, to: toHeight} }, function() { b.style.display = "none" }) } } }); this.oDivClose_ = j; this.oImg_ = k; this.oDivZoom_ = l; this.oDivCover_ = i; this.oSpanUiBase = h; this.oButtons_ = o } makedom.prototype = { getCloseButton: function() { return this.oDivClose_ }, getImage: function() { return this.oImg_ }, getIndicator: function() { return this.oDivZoom_ }, getCover: function() { return this.oDivCover_ }, getButtons: function() { return this.oButtons_ }, close: function() { remove(document.getElementById("imageview")) } }; makedom.getInstance = function(a) { return makedom.instance_ || (makedom.instance_ = new this(a)) };
 //imageViewer.js
-var IimageViewDom = new Interface('IimageViewDom', ['getCloseButton', 'getImage', 'getIndicator', "getCover"]); var iWindowW = windowWidth(), iWindowH = windowHeight(); var ua = navigator.userAgent.toLowerCase(), isWebkit = /webkit/.test(ua), isOpera = /opera/.test(ua), isIE = /msie/.test(ua); function imageViewer(a) { Interface.ensureImplements(a, IimageViewDom); this.oDivClose = a.getCloseButton(); this.oImg = a.getImage(); this.imgHeight; this.imgWidth; this.oriHeight; this.oriWidth; this.imgDeg = 0; this.whrate; this.left; this.top; new Drag(this.oImg); this.oDivCover = a.getCover(); this.oDivZoom = a.getIndicator(); this.closeUi = a.close; this.pannelButtons = a.getButtons() } imageViewer.prototype = { zoomfn: null, actions_: [], closeViewer: function() { var a = this.oImg; var b = this.oDivZoom; var c = this.oDivClose; var d = this.oDivCover; var e = getPos(a).x; var f = getPos(a).y; var g = a.offsetWidth, heightFrom = a.offsetHeight, leftTo = e + (g / 2) + scrollX(), leftFrom = e + scrollX(), topTo = f + (heightFrom / 2) + scrollY(), topFrom = f + scrollY(); var h = this; addAnimation(a, { "left": { from: leftFrom, to: leftTo }, "top": { from: topFrom, to: topTo }, 'width': { from: g, to: 0 }, 'height': { from: heightFrom, to: 0} }, bind(function() { d.style.display = "none"; a.style.display = "none"; this.removeEvent(); this.closeUi() }, this)) }, zoomOut: function() { var a = this.oImg; var b = this.oDivZoom; var c = this.oDivClose; var d = this.oDivCover; this.oriHeight = this.imgHeight = a.height; this.oriWidth = this.imgWidth = a.width; this.whrate = this.imgHeight / this.imgWidth; this.left = getPos(a).x; this.top = getPos(a).y; var e = windowWidth() / 2 + scrollX(), leftTo = (windowWidth() - a.width) / 2 + scrollX(), topFrom = windowHeight() / 2 + +scrollY(), topTo = (windowHeight() - a.height) / 2 + scrollY(), widthTo = a.width, heightTo = a.height; a.style.visibility = "visible"; a.style.display = "block"; d.style.display = ""; a.style.height = a.style.width = "0px"; a.style.left = e + "px"; a.style.top = topFrom + "px"; addAnimation(a, { "left": { from: e, to: leftTo }, "top": { from: topFrom, to: topTo }, 'width': { from: 0, to: widthTo }, 'height': { from: 0, to: heightTo} }) }, openViewer: function() { var a = this.actions_; var b = this.oImg; var c = this.zoomOut; var d = this; this.imageOnReady(bind(function() { var i = 0, ilen = a.length; for (; i < ilen; i++) { a[i]() } c.call(this) }, this)) }, imageOnReady: function(a) { var b = this.oImg; if (b.width == 0) { b.onload = function() { a() } } else { a() } }, initUI: function() { var b = this.actions_; var c = this.oImg; var d = this.oDivZoom; var e = this.oDivClose; b.push(function() { setCenter(c); var a = 2; if (document.body.scrollHeight > iWindowH) a = 22; e.style.left = (iWindowW - e.offsetWidth) - a + "px" }) }, initEvent: function() { var a = this.oDivClose; var b = this.oImg; addEvent(a, "click", bind(this.closeViewer, this)); addEvent(document, "click", bind(this.closeViewer, this)); addEvent(document, "keydown", bind(this.keyHandler, this)); addEvent(b, "click", function(e) { e.preventDefault(); e.stopPropagation(); b.style.webkitTransition = "" }); this.zoomfn = bind(this.wheel, this); if (document.addEventListener && !isWebkit && !isOpera) { addEvent(b, "DOMMouseScroll", this.zoomfn); addEvent(document, "DOMMouseScroll", this.zoomfn) } else { addEvent(b, "mousewheel", this.zoomfn); addEvent(document, "mousewheel", this.zoomfn) } }, setAction: function() { var b = this.oImg; addEvent(this.pannelButtons["left"], "click", bind(function(e) { this.imgDeg -= 90; b.style.cssText += ";-webkit-transform:rotate(0deg);-webkit-transition:all 0.5s ease-in;-webkit-transform: rotate(" + this.imgDeg + "deg);transform: rotate(" + this.imgDeg + "deg);"; e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["right"], "click", bind(function(e) { this.imgDeg += 90; b.style.cssText += ";-webkit-transform:rotate(0deg);-webkit-transition:all 0.5s ease-in;-webkit-transform: rotate(" + this.imgDeg + "deg);transform: rotate(" + this.imgDeg + "deg);"; e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["big"], "click", bind(function(e) { this.zoomOnCenter(e, 120); e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["small"], "click", bind(function(e) { this.zoomOnCenter(e, -120); e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["originally"], "click", bind(function(e) { this.oImg.style.width = this.oriWidth + "px"; this.oImg.style.height = this.oriHeight + "px"; e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["edit"], "click", bind(function(e) { e.preventDefault(); e.stopPropagation(); var a = screen.width, screenH = screen.height; postMessage_({ "newtab": { url: "http://www.pixlr.com/editor/?image=" + b.src + "&title=" + b.alt + "&loc=zh-cn"} }) }, this)); addEvent(this.pannelButtons["help"], "click", bind(function(e) { e.preventDefault(); e.stopPropagation(); postMessage_({ "newtab": { url: "http://www.cnblogs.com/wangxiang/articles/1657516.html"} }) }, this)) }, removeEvent: function() { if (document.addEventListener && !isWebkit && !isOpera) { removeEvent(document, "DOMMouseScroll", this.zoomfn) } else { removeEvent(document, "mousewheel", this.zoomfn) } }, keyHandler: function(e) { switch (e.keyCode) { case 27: this.closeViewer(); break; case 40: this.zoom(e, -15); break; case 38: this.zoom(e, 15); break } }, zoom: function(e, a) { this.oImg.style.webkitTransition = ""; var b = e.target || e.srcElement; if ((this.imgDeg / 90) % 2 == 1) { this.zoomOnCenter(e, a) } else (b.tagName == "DIV" || b.tagName == "BODY") ? this.zoomOnCenter(e, a) : this.zoomOnPointer(e, a); e.preventDefault(); e.stopPropagation() }, wheel: function(e) { if (!isIE && !isWebkit && !isOpera) { this.zoom(e, e.detail * -4) } else { this.zoom(e, e.wheelDelta) } }, zoomOnCenter: function(e, a) { var b = this.oImg; var c = this.oDivZoom; var d = this.oDivClose; var f = this.imgHeight / this.imgWidth, _width = b.width, _height = b.height, width = b.width + a, height = width * f; if (width < 0) return; b.style.width = width + 'px'; b.style.height = height + 'px'; b.style.top = parseFloat(b.style.top) - (height - _height) / 2 + "px"; b.style.left = parseFloat(b.style.left) - (width - _width) / 2 + "px" }, zoomOnPointer: function(e, a) { var b = this.oImg; var c, pointY; var d = bind(function() { this.imgWidth = b.offsetWidth; this.imgHeight = b.offsetHeight; this.top = getPos(b).y; this.left = getPos(b).x }, this); d(); var f = e.clientX - this.left; var g = e.clientY - this.top; b.style.width = parseFloat(b.style.width) + a + "px"; var h = b.width / this.imgWidth; b.style.height = parseFloat(b.style.width) * this.whrate + "px"; var i = parseFloat(h * f); var j = parseFloat(h * g); b.style.top = scrollY() + this.top - (j - g) + "px"; b.style.left = scrollX() + this.left - (i - f) + "px" } };
+var IimageViewDom = new Interface('IimageViewDom', ['getCloseButton', 'getImage', 'getIndicator', "getCover"]); var iWindowW = windowWidth(), iWindowH = windowHeight(); var ua = navigator.userAgent.toLowerCase(), isWebkit = /webkit/.test(ua), isOpera = /opera/.test(ua), isIE = /msie/.test(ua); function imageViewer(a) { Interface.ensureImplements(a, IimageViewDom); this.oDivClose = a.getCloseButton(); this.oImg = a.getImage(); this.imgHeight; this.imgWidth; this.oriHeight; this.oriWidth; this.imgDeg = 0; this.whrate; this.left; this.top; new Drag({ drag: this.oImg, handle: this.oImg }); this.oDivCover = a.getCover(); this.oDivZoom = a.getIndicator(); this.closeUi = a.close; this.pannelButtons = a.getButtons() } imageViewer.prototype = { zoomfn: null, actions_: [], closeViewer: function() { var a = this.oImg; var b = this.oDivZoom; var c = this.oDivClose; var d = this.oDivCover; var e = getPos(a).x; var f = getPos(a).y; var g = a.offsetWidth, heightFrom = a.offsetHeight, leftTo = e + (g / 2) + scrollX(), leftFrom = e + scrollX(), topTo = f + (heightFrom / 2) + scrollY(), topFrom = f + scrollY(); var h = this; addAnimation(a, { "left": { from: leftFrom, to: leftTo }, "top": { from: topFrom, to: topTo }, 'width': { from: g, to: 0 }, 'height': { from: heightFrom, to: 0} }, bind(function() { d.style.display = "none"; a.style.display = "none"; this.removeEvent(); this.closeUi() }, this)) }, zoomOut: function() { var a = this.oImg; var b = this.oDivZoom; var c = this.oDivClose; var d = this.oDivCover; this.oriHeight = this.imgHeight = a.height; this.oriWidth = this.imgWidth = a.width; this.whrate = this.imgHeight / this.imgWidth; this.left = getPos(a).x; this.top = getPos(a).y; var e = windowWidth() / 2 + scrollX(), leftTo = (windowWidth() - a.width) / 2 + scrollX(), topFrom = windowHeight() / 2 + +scrollY(), topTo = (windowHeight() - a.height) / 2 + scrollY(), widthTo = a.width, heightTo = a.height; a.style.visibility = "visible"; a.style.display = "block"; d.style.display = ""; a.style.height = a.style.width = "0px"; a.style.left = e + "px"; a.style.top = topFrom + "px"; addAnimation(a, { "left": { from: e, to: leftTo }, "top": { from: topFrom, to: topTo }, 'width': { from: 0, to: widthTo }, 'height': { from: 0, to: heightTo} }) }, openViewer: function() { var a = this.actions_; var b = this.oImg; var c = this.zoomOut; var d = this; this.imageOnReady(bind(function() { var i = 0, ilen = a.length; for (; i < ilen; i++) { a[i]() } c.call(this) }, this)) }, imageOnReady: function(a) { var b = this.oImg; if (b.width == 0) { b.onload = function() { a() } } else { a() } }, initUI: function() { var b = this.actions_; var c = this.oImg; var d = this.oDivZoom; var e = this.oDivClose; b.push(function() { setCenter(c); var a = 2; if (document.body.scrollHeight > iWindowH) a = 22; e.style.left = (iWindowW - e.offsetWidth) - a + "px" }) }, initEvent: function() { var a = this.oDivClose; var b = this.oImg; addEvent(a, "click", bind(this.closeViewer, this)); addEvent(document, "click", bind(this.closeViewer, this)); addEvent(document, "keydown", bind(this.keyHandler, this)); addEvent(b, "click", function(e) { e.preventDefault(); e.stopPropagation(); b.style.webkitTransition = "" }); this.zoomfn = bind(this.wheel, this); if (document.addEventListener && !isWebkit && !isOpera) { addEvent(b, "DOMMouseScroll", this.zoomfn); addEvent(document, "DOMMouseScroll", this.zoomfn) } else { addEvent(b, "mousewheel", this.zoomfn); addEvent(document, "mousewheel", this.zoomfn) } }, setAction: function() { var b = this.oImg; addEvent(this.pannelButtons["left"], "click", bind(function(e) { this.imgDeg -= 90; b.style.cssText += ";-webkit-transform:rotate(0deg);-webkit-transition:all 0.5s ease-in;-webkit-transform: rotate(" + this.imgDeg + "deg);transform: rotate(" + this.imgDeg + "deg);"; e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["right"], "click", bind(function(e) { this.imgDeg += 90; b.style.cssText += ";-webkit-transform:rotate(0deg);-webkit-transition:all 0.5s ease-in;-webkit-transform: rotate(" + this.imgDeg + "deg);transform: rotate(" + this.imgDeg + "deg);"; e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["big"], "click", bind(function(e) { this.zoomOnCenter(e, 120); e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["small"], "click", bind(function(e) { this.zoomOnCenter(e, -120); e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["originally"], "click", bind(function(e) { this.oImg.style.width = this.oriWidth + "px"; this.oImg.style.height = this.oriHeight + "px"; e.preventDefault(); e.stopPropagation() }, this)); addEvent(this.pannelButtons["edit"], "click", bind(function(e) { e.preventDefault(); e.stopPropagation(); var a = screen.width, screenH = screen.height; postMessage_({ "newtab": { url: "http://www.pixlr.com/editor/?image=" + b.src + "&title=" + b.alt + "&loc=zh-cn"} }) }, this)); addEvent(this.pannelButtons["help"], "click", bind(function(e) { e.preventDefault(); e.stopPropagation(); postMessage_({ "newtab": { url: "http://www.cnblogs.com/wangxiang/articles/1657516.html"} }) }, this)) }, removeEvent: function() { if (document.addEventListener && !isWebkit && !isOpera) { removeEvent(document, "DOMMouseScroll", this.zoomfn) } else { removeEvent(document, "mousewheel", this.zoomfn) } }, keyHandler: function(e) { switch (e.keyCode) { case 27: this.closeViewer(); break; case 40: this.zoom(e, -15); break; case 38: this.zoom(e, 15); break } }, zoom: function(e, a) { this.oImg.style.webkitTransition = ""; var b = e.target || e.srcElement; if ((this.imgDeg / 90) % 2 == 1) { this.zoomOnCenter(e, a) } else (b.tagName == "DIV" || b.tagName == "BODY") ? this.zoomOnCenter(e, a) : this.zoomOnPointer(e, a); e.preventDefault(); e.stopPropagation() }, wheel: function(e) { if (!isIE && !isWebkit && !isOpera) { this.zoom(e, e.detail * -4) } else { this.zoom(e, e.wheelDelta) } }, zoomOnCenter: function(e, a) { var b = this.oImg; var c = this.oDivZoom; var d = this.oDivClose; var f = this.imgHeight / this.imgWidth, _width = b.width, _height = b.height, width = b.width + a, height = width * f; if (width < 0) return; b.style.width = width + 'px'; b.style.height = height + 'px'; b.style.top = parseFloat(b.style.top) - (height - _height) / 2 + "px"; b.style.left = parseFloat(b.style.left) - (width - _width) / 2 + "px" }, zoomOnPointer: function(e, a) { var b = this.oImg; var c, pointY; var d = bind(function() { this.imgWidth = b.offsetWidth; this.imgHeight = b.offsetHeight; this.top = getPos(b).y; this.left = getPos(b).x }, this); d(); var f = e.clientX - this.left; var g = e.clientY - this.top; b.style.width = parseFloat(b.style.width) + a + "px"; var h = b.width / this.imgWidth; b.style.height = parseFloat(b.style.width) * this.whrate + "px"; var i = parseFloat(h * f); var j = parseFloat(h * g); b.style.top = scrollY() + this.top - (j - g) + "px"; b.style.left = scrollX() + this.left - (i - f) + "px" } };

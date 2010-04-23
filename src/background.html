@@ -102,6 +102,7 @@
             "textdown": "newwindow"
         };
 
+
         //接收content script 的请求
         chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
             if (request.option == "getinfo")
@@ -111,7 +112,8 @@
                     dragengine: (localStorage["dragengine"] || 0),
                     dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
                     dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow"),
-                    superdrag: localStorage["superdrag"] || JSON.stringify(superDrag)
+                    superdrag: localStorage["superdrag"] || JSON.stringify(superDrag),
+                    enablecontextmenu: localStorage["enablecontextmenu"] //开启自定义右键菜单功能
                 });
             else if (request.option == "isfirstrunimageviewer") {
                 if (!localStorage['tips']) {
@@ -127,6 +129,7 @@
         if (!localStorage['firstrun']) {
             chrome.tabs.create({ url: chrome.extension.getURL('options.html'), selected: true });
             localStorage['firstrun'] = true;
+            localStorage["enablecontextmenu"] = "1";
         }
     </script>
 </body>
