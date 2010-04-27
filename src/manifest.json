@@ -1,6 +1,6 @@
 ﻿{
 "name":"谷歌浏览器中国版(QuickSearch)",
-"version":"2.0.2",
+"version":"2.0.3",
 "description":"谷歌浏览器中国版：超级拖拽、图片查看器、图片编辑器、视频独立播放、向右键菜单中添加自定义的搜索引擎.",
 "background_page": "background.html",
    "icons": {

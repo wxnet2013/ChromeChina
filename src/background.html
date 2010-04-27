@@ -79,9 +79,11 @@
                     }
                     */
 
-                    var sName = "?chromemovie=t&i=" + info.i;
-
-                    window.open(url, sName, "left=" + parseInt(info.left) + ",top=" + parseInt(info.top) + ",width=" + parseInt(info.width) + ", height=" + parseInt(info.height));
+                    //Chromium 5.0.388.0 (45564)以后的版本无法读取 window.name
+                    //var sName = "?chromemovie=t&i=" + info.i;
+                    //window.open(url, sName, "left=" + parseInt(info.left) + ",top=" + parseInt(info.top) + ",width=" + parseInt(info.width) + ", height=" + parseInt(info.height));
+                    
+                    window.open(url, "chromechina", "left=" + parseInt(info.left) + ",top=" + parseInt(info.top) + ",width=" + parseInt(info.width) + ", height=" + parseInt(info.height));
                 }
             });
         });

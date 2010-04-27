@@ -4,16 +4,16 @@
 * @version 0.0.1
 */
 
-var par = window.name;
+var par = localStorage["par"]; //window.name;
 
 //是否是播放器页面
-var isMovieMode = (par != "" && par.indexOf("chromemovie") != -1),
+var isMovieMode = (!!par && par.indexOf("chromemovie") != -1),
 //按钮状态
     isButtonShow = false;
-
 if (isMovieMode) {
+    localStorage["par"] = null;
     //创建空白区域
-    var a = setInterval(function() {
+    var a = setInterval(function () {
         if (document.body) {
             var div = document.createElement("div");
             div.style.cssText += ";position:fixed;left:0;top:0;z-index:9999;width:100%;height:100%;background:#fff url(" + chrome.extension.getURL("images/loading.gif") + ") no-repeat center center;";
@@ -164,12 +164,12 @@ function mouseout() {
 //打开视频窗口
 function showMovie(w, h, index) {
     var screenW = screen.width, screenH = screen.height;
-    postMessage_({
+    localStorage["par"] = "?chromemovie=t&i=" + index;
+    chrome.extension.connect().postMessage({
         "left": (screenW - w) / 2,
         "top": (screenH - h) / 2,
         "width": w,
         "height": h,
-        "i": index,
         "video": location.href
     });
 };
