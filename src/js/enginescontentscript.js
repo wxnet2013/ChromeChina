@@ -11,28 +11,28 @@ function search(opt, action) {
     info.selectText = "";
 }
 
-var reUrl = /(.*?)\.(com|cn|tel|mobi|net|org|asia|me|com|cn|net|cn|org|cn|gov|cn|hk|tv|biz|cc|name|info|公司|网络|中国)(\/(.*?))?/i;
-
 var view = {
     toolbar: function (showtype) {
         if (!!$("view-cmenu")) return $("view-cmenu");
         var div = document.createElement("ul");
         div.id = "view-cmenu";
         div.className = "view-hidden";
-
+	
+	/*
         var li = document.createElement("li");
         li.id = "copy";
         li.innerHTML = "<a href=\"javascript:document.execCommand('copy',false,null);\">复制(<span class=\"underline\">C</span>)<span class=\"hotkey\">Ctrl+C</span></a>";
-        div.appendChild(li);
-
+        div.appendChild(li); 
+       
         li = document.createElement("li");
         li.id = "goto";
         li.style.display = "none";
         div.appendChild(li);
-
+	
         li = document.createElement("li");
         li.className = "line";
         div.appendChild(li);
+       */
 
         var self = this;
         each(info.engines_, function (i, obj) {
@@ -64,11 +64,13 @@ var view = {
 function onContextMenu(e) {
     if (doNotShowMenu(e)) return;
     info.selectText = getSelectText(e);
-    if (info.selectText) {
+    if (info.selectText && !!e.ctrlKey) {
         toolbar = view.toolbar();
         showMenu(toolbar, e, function () {
             removeClass(toolbar, "view-hidden");
         });
+/*
+var reUrl = /(.*?)\.(com|cn|tel|mobi|net|org|asia|me|com|cn|net|cn|org|cn|gov|cn|hk|tv|biz|cc|name|info|公司|网络|中国)(\/(.*?))?/i;
         var li = document.getElementById("goto");
         if (reUrl.test(info.selectText)) {
             li.style.cssText = "display:block;white-space: nowrap;overflow: hidden;";
@@ -84,6 +86,7 @@ function onContextMenu(e) {
         } else {
             li.style.display = "none";
         }
+*/
         trackEvent("右键菜单", "使用右键菜单");
         /**
         *在查看源文件页面(view-source:http)不去阻止默认的快捷菜单
@@ -110,7 +113,7 @@ function onContextMenu(e) {
 function doNotShowMenu(e) {
     if (e.target.tagName.toLowerCase() == "textarea" ||
         (e.target.tagName.toLowerCase() == "input" && target.type == "text") ||
-        !!document.querySelector("div:first-child.webkit-line-gutter-backdrop") || enablecontextmenu == "0") {
+        !!document.querySelector("div:first-child.webkit-line-gutter-backdrop")) {
         return true;
     }
 }

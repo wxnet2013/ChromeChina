@@ -103,6 +103,9 @@
 </head>
 <body>
     <div class="center">
+    	<p>QuickSearch 2.0.4后，将使用<b>同时按ctrl键和鼠标右键</b>组合，来弹出自定义搜索引擎快捷菜单。</p>
+    </div>
+    <div class="center">
         <h3>
             谷歌浏览器中国版(QuickSearch)</h3>
         <span>作者:王祥 联系:wxnet2013@gmail.com </span><a href="http://code.google.com/p/searchforchrome/issues/list"
@@ -123,9 +126,6 @@
         <ul id="engines">
         </ul>
         <input id="add" type="button" value="添加" /><a class="withvideo" target="_blank" href="http://www.cnblogs.com/wangxiang/articles/1647917.html">帮助</a><br />
-        <h5>
-            右键菜单设置</h5>
-        <input type="checkbox" id="enablecontextmenu" checked="checked"/><label for="enablecontextmenu">开启自定义的右键菜单</label>
         <h5>
             显示搜索结果:</h5>
         <select id="search_show">
@@ -376,6 +376,9 @@
             oSelectShowSearch.options.add(new Option(v, i));
         });
 
+
+
+
         oSelectShowSearch.selectedIndex = getIndexByValue(oSelectShowSearch, getData("showsearch") || "newwindow");
 
         addEvent(oSelectShowSearch, "change", function () {
@@ -397,10 +400,7 @@
             return ret;
         }
 
-        addEvent($("enablecontextmenu"), "change", function () {
-            var state = (this.checked == true) ? 1 : 0;
-            saveData("enablecontextmenu", state);
-        })
+
 
 
         /**

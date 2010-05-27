@@ -114,8 +114,7 @@
                     dragengine: (localStorage["dragengine"] || 0),
                     dragImageDisplayMode: (localStorage["dragImageDisplayMode"] || "imageview"),
                     dragLinkDisplayMode: (localStorage["dragLinkDisplayMode"] || "newwindow"),
-                    superdrag: localStorage["superdrag"] || JSON.stringify(superDrag),
-                    enablecontextmenu: localStorage["enablecontextmenu"] //开启自定义右键菜单功能
+                    superdrag: localStorage["superdrag"] || JSON.stringify(superDrag)
                 });
             else if (request.option == "isfirstrunimageviewer") {
                 if (!localStorage['tips']) {
